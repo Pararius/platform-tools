@@ -1,8 +1,12 @@
 from google.cloud.storage import Client as storageClient
 import json
 
-def read_all_jsons_from_bucket(bucket:str, prefix:str, client:storageClient = None) -> list:
+def read_jsons_from_bucket(bucket:str, prefix:str, client:storageClient = None) -> list:
+    '''
+        read_jsons_from_bucket(bucket:str, prefix:str, client:storageClient = None)
 
+        Reads all JSON files that are found under the provided prefix and returns a list of JSON objects
+    '''
     if client is None:
         client = storageClient()
 
