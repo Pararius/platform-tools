@@ -31,6 +31,8 @@ setup(
         [
             'pandas>=1.0', 
             'google-cloud-storage',
+            'gcsfs',
+            'pyarrow',
         ],
     python_requires='>=3.7',
 )
