@@ -33,7 +33,6 @@ def read_jsons_from_bucket(
 def read_parquet_from_bucket(
     bucket: str, prefix: str, client: storageClient = storageClient()
 ) -> pandas.DataFrame:
-
     url = f"gs://{bucket}/{prefix}"
     fs = gcsfs.GCSFileSystem()
 
@@ -93,16 +92,29 @@ def gen_chunks(reader, chunksize=100):
     yield chunk
 
 
+def get_pubsub_callback(
+    publish_future: pubsub_v1.publisher.futures.Future, data: str
+) -> Callable[[pubsub_v1.publisher.futures.Future], None]:
+    def callback(publish_future: pubsub_v1.publisher.futures.Future) -> None:
+        try:
+            # Wait 60 seconds for the publish call to succeed.
+            publish_future.result(timeout=60)
+        except futures.TimeoutError:
+            print(f"Publishing {data} timed out.")
+
+    return callback
+
+
+# see https://cloud.google.com/pubsub/docs/publisher#publishing_messages
 def publish_messages(
     iterator,
-    project_id: str,
-    topic_name: str,
+    project: str,
+    topic: str,
     chunk_size: int = 500,
     transform_callback: Callable = None,
-    done_callback: Callable = None,
     publisher: pubsub_v1.PublisherClient = pubsub_v1.PublisherClient(),
 ) -> bool:
-    topic_path = publisher.topic_path(project_id, topic_name)
+    topic_path = publisher.topic_path(project, topic)
     lines_done = 0
 
     for chunk in gen_chunks(iterator, chunksize=chunk_size):
@@ -116,11 +128,9 @@ def publish_messages(
 
             # # When you publish a message, the client returns a future.
             publish_future = publisher.publish(topic_path, content.encode("UTF-8"))
+
             # # Non-blocking. Publish failures are handled in the callback function.
-
-            if callable(done_callback):
-                publish_future.add_done_callback(done_callback)
-
+            publish_future.add_done_callback(get_pubsub_callback(publish_future, content))
             publish_futures.append(publish_future)
 
         # Wait for all the publish futures to resolve before continuing.
