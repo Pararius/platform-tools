@@ -92,22 +92,19 @@ def gen_chunks(reader, chunksize=100):
     yield chunk
 
 
-def publish_csv_rows(
-    enumerator,
-    prefix: str,
+def publish_messages(
+    iterator,
     projectId: str,
     topicName: str,
     chunkSize: int = 500,
     transformCallback: Callable = None,
     doneCallback: Callable = None,
-    client: storageClient = storageClient(),
     publisher: pubsub_v1.PublisherClient = pubsub_v1.PublisherClient(),
 ) -> bool:
     topic_path = publisher.topic_path(projectId, topicName)
     lines_done = 0
 
-    for chunk in gen_chunks(reader, chunksize=chunkSize):
-
+    for chunk in gen_chunks(iterator, chunksize=chunkSize):
         publish_futures = []
 
         for data in chunk:
@@ -131,3 +128,5 @@ def publish_csv_rows(
         # Keep track of progress for debugging
         lines_done += len(chunk)
         print(f"Published {lines_done} records sofar")
+
+    return True
