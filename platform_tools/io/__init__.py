@@ -82,6 +82,13 @@ def create_csv_reader_from_bucket(
     return reader
 
 
+def wrap_payload_for_raw_storage(target_path: str, payload: dict) -> dict:
+    return {
+        "target_path": target_path,
+        "payload": payload,
+    }
+
+
 def gen_chunks(reader, chunksize=100):
     chunk = []
     for i, line in enumerate(reader):
