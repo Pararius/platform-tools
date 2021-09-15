@@ -9,3 +9,6 @@ cs: ## Checks for code style issues
 
 cs-fix: ## Fixes code style issues
 	docker-compose run --rm python black .
+
+build: ## Builds the image including the setup.py file (run this when you've changed dependencies)
+	docker-compose build python
