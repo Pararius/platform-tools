@@ -1,10 +1,11 @@
+import csv
 from typing import Callable
 from concurrent import futures
 from google.cloud.storage import Client as storageClient
 from google.cloud import pubsub_v1
 import json
 import pandas
-from io import BytesIO
+from io import BytesIO, StringIO
 import gcsfs
 from pyarrow import parquet
 
@@ -72,9 +73,9 @@ def write_dataframe_to_parquet(
 
 def read_csv_from_bucket(
     bucket: str, prefix: str, client: storageClient = storageClient()
-) -> DictReader:
-    bucket = client.bucket(SOURCE_BUCKET_NAME)
-    file = bucket.blob(SOURCE_OBJECT_ID)
+) -> csv.DictReader:
+    bucket = client.bucket(bucket)
+    file = bucket.blob(prefix)
     scsv = file.download_as_bytes().decode("UTF-8")
     f = StringIO(scsv)
     reader = csv.DictReader(f, delimiter=";", quotechar='"')
@@ -94,22 +95,22 @@ def gen_chunks(reader, chunksize=100):
 
 def publish_messages(
     iterator,
-    projectId: str,
-    topicName: str,
-    chunkSize: int = 500,
-    transformCallback: Callable = None,
-    doneCallback: Callable = None,
+    project_id: str,
+    topic_name: str,
+    chunk_size: int = 500,
+    transform_callback: Callable = None,
+    done_callback: Callable = None,
     publisher: pubsub_v1.PublisherClient = pubsub_v1.PublisherClient(),
 ) -> bool:
-    topic_path = publisher.topic_path(projectId, topicName)
+    topic_path = publisher.topic_path(project_id, topic_name)
     lines_done = 0
 
-    for chunk in gen_chunks(iterator, chunksize=chunkSize):
+    for chunk in gen_chunks(iterator, chunksize=chunk_size):
         publish_futures = []
 
         for data in chunk:
-            if callable(transformCallback):
-                data = transformCallback(data)
+            if callable(transform_callback):
+                data = transform_callback(data)
 
             content = json.dumps(data)
 
@@ -117,8 +118,8 @@ def publish_messages(
             publish_future = publisher.publish(topic_path, content.encode("UTF-8"))
             # # Non-blocking. Publish failures are handled in the callback function.
 
-            if callable(doneCallback):
-                publish_future.add_done_callback(doneCallback)
+            if callable(done_callback):
+                publish_future.add_done_callback(done_callback)
 
             publish_futures.append(publish_future)
 
