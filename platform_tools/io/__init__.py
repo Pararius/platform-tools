@@ -70,7 +70,7 @@ def write_dataframe_to_parquet(
         return False
 
 
-def read_csv_from_bucket(
+def create_csv_reader_from_bucket(
     bucket: str, prefix: str, client: storageClient = storageClient()
 ) -> csv.DictReader:
     bucket = client.bucket(bucket)
@@ -111,7 +111,7 @@ def publish_messages(
     project: str,
     topic: str,
     chunk_size: int = 500,
-    transform_callback: Callable = None,
+    transform_callback = None,
     publisher: pubsub_v1.PublisherClient = pubsub_v1.PublisherClient(),
 ) -> bool:
     topic_path = publisher.topic_path(project, topic)
