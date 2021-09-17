@@ -14,4 +14,4 @@ build: ## Builds the image including the setup.py file (run this when you've cha
 	docker-compose build python
 
 test:
-	docker-compose run --rm python pytest
+	docker-compose run --rm python pytest $(ARGS)

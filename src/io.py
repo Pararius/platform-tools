@@ -29,6 +29,7 @@ def read_parquet_from_bucket(bucket: str, prefix: str) -> DataFrame:
     url = f"gs://{bucket}/{prefix}"
     fs = gcsfs.GCSFileSystem()
 
+    print(fs.glob("bla"))
     files = ["gs://" + path for path in fs.glob(url + "/*.parquet")]
     ds = parquet.ParquetDataset(files, filesystem=fs)
     df = ds.read().to_pandas()
