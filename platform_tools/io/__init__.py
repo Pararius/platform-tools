@@ -4,7 +4,7 @@ from concurrent import futures
 from google.cloud.storage import Client as storageClient
 from google.cloud import pubsub_v1
 import json
-import pandas
+from pandas import DataFrame
 from io import BytesIO, StringIO
 import gcsfs
 from pyarrow import parquet
@@ -32,7 +32,7 @@ def read_jsons_from_bucket(
 
 def read_parquet_from_bucket(
     bucket: str, prefix: str, client: storageClient = storageClient()
-) -> pandas.DataFrame:
+) -> DataFrame:
     url = f"gs://{bucket}/{prefix}"
     fs = gcsfs.GCSFileSystem()
 
@@ -44,13 +44,13 @@ def read_parquet_from_bucket(
 
 
 def write_dataframe_to_parquet(
-    df: pandas.DataFrame,
+    df: DataFrame,
     bucket: str,
     prefix: str,
     client: storageClient = storageClient(),
 ) -> bool:
     """
-    write_dataframe_to_parquet(df:pandas.DataFrame, bucket:str, prefix:str, client:storageClient = storageClient())
+    write_dataframe_to_parquet(df:DataFrame, bucket:str, prefix:str, client:storageClient = storageClient())
 
     Writes a Pandas dataframe to a parquet blob in GCP storage
     """
