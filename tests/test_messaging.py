@@ -1,13 +1,13 @@
 import json
 from concurrent import futures
 from unittest.mock import Mock, patch, MagicMock
-from src import pubsub
+from src import messaging
 
 
 def test_get_pubsub_callback():
     future = Mock()
     data = "my-data"
-    callback = pubsub.get_pubsub_callback(future, data)
+    callback = messaging.get_pubsub_callback(future, data)
 
     assert callable(callback) == True
 
@@ -23,7 +23,7 @@ def test_publish_messages(mock_publisher_client):
     with patch.object(futures, "wait", return_value=[]):
         mock_topic_path = Mock()
         mock_publisher_client.topic_path.return_value = mock_topic_path
-        result = pubsub.publish_messages(
+        result = messaging.publish_messages(
             mock_publisher_client,
             iterator,
             project,

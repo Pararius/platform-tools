@@ -3,9 +3,10 @@ from csv import DictReader
 
 import pandas
 from gcsfs import GCSFileSystem
+from google.cloud.exceptions import GoogleCloudError
 from pandas import DataFrame
 
-import src.io as io
+import src.storage as io
 from unittest.mock import Mock, patch, MagicMock
 
 
@@ -72,7 +73,7 @@ def test_write_dataframe_to_parquet_failure(mock_storage_client):
     mock_blob = Mock()
     mock_storage_client.bucket.return_value = mock_bucket
     mock_bucket.blob.return_value = mock_blob
-    mock_blob.upload_from_string.side_effect = Exception("Something went wrong")
+    mock_blob.upload_from_string.side_effect = GoogleCloudError("Something went wrong")
 
     result = io.write_dataframe_to_parquet(df, bucket, prefix, mock_storage_client)
 
