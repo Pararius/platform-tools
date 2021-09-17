@@ -13,5 +13,5 @@ cs-fix: ## Fixes code style issues
 build: ## Builds the image including the setup.py file (run this when you've changed dependencies)
 	docker-compose build python
 
-test:
+test: ## Runs all tests for this library
 	docker-compose run --rm python pytest $(ARGS)
