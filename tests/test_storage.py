@@ -6,7 +6,7 @@ from gcsfs import GCSFileSystem
 from google.cloud.exceptions import GoogleCloudError
 from pandas import DataFrame
 
-import src.storage as io
+import treehouse.storage as io
 from unittest.mock import Mock, patch, MagicMock
 
 

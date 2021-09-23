@@ -1,7 +1,7 @@
 import json
 from concurrent import futures
 from unittest.mock import Mock, patch, MagicMock
-from src import messaging
+from treehouse import messaging
 
 
 def test_get_pubsub_callback():
