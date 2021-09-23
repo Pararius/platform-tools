@@ -1,4 +1,4 @@
-from src import optimization
+from treehouse import optimization
 
 
 def test_split_into_chunks():
