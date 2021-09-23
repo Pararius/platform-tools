@@ -23,7 +23,7 @@ def test_publish_messages(mock_publisher_client):
     with patch.object(futures, "wait", return_value=[]):
         mock_topic_path = Mock()
         mock_publisher_client.topic_path.return_value = mock_topic_path
-        result = messaging.publish_messages(
+        result = messaging.publish_messages_from_iterator(
             mock_publisher_client,
             iterator,
             project,
