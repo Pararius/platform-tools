@@ -18,7 +18,34 @@ def get_pubsub_callback(
     return callback
 
 
-def publish_messages(
+def publish_message(
+    publisher: pubsub_v1.PublisherClient,
+    data,
+    project: str,
+    topic: str,
+    transform_callback=None,
+) -> bool:
+    topic_path = publisher.topic_path(project, topic)
+    lines_done = 0
+
+    if callable(transform_callback):
+        data = transform_callback(data)
+
+    content = json.dumps(data)
+
+    # # When you publish a message, the client returns a future.
+    publish_future = publisher.publish(topic_path, content.encode("UTF-8"))
+
+    # # Non-blocking. Publish failures are handled in the callback function.
+    publish_future.add_done_callback(get_pubsub_callback(publish_future, content))
+
+    # Wait for all the publish futures to resolve before continuing.
+    futures.wait(publish_future, return_when=futures.ALL_COMPLETED)
+
+    return True
+
+
+def publish_messages_from_iterator(
     publisher: pubsub_v1.PublisherClient,
     iterator,
     project: str,
