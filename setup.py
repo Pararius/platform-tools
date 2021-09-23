@@ -30,9 +30,10 @@ setup(
     author="TreeHouse",
     author_email="dev@treehouse.nl",
     url="https://github.com/treehouselabs/platform-tools",
-    packages=find_packages("src"),
-    package_dir={"": "src"},
-    py_modules=[splitext(basename(i))[0] for i in glob("src/*.py")],
+    packages=find_packages("."),
+    package_dir={"": "."},
+    py_modules=[splitext(basename(i))[0] for i in glob("treehouse/*.py")],
+    version="0.1",
     include_package_data=True,
     zip_safe=False,
     classifiers=[
