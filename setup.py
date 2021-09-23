@@ -21,7 +21,7 @@ long_description = "{}".format(
     read("README.md"),
 )
 
-setup(  
+setup(
     name="platform-tools",
     description="A collection of tools for working with GCP",
     long_description=long_description,
@@ -33,7 +33,7 @@ setup(
     packages=find_packages("."),
     package_dir={"": "."},
     py_modules=[splitext(basename(i))[0] for i in glob("treehouse/*.py")],
-    version='0.1',
+    version="0.1",
     include_package_data=True,
     zip_safe=False,
     classifiers=[
