@@ -105,8 +105,14 @@ def test_create_csv_reader_from_bucket(mock_storage):
 def test_wrap_payload_for_raw_storage():
     payload = {"foo": "bar"}
     target_path = "path/to/file"
+    source = "my-source"
+    type = "my-type"
+    owner = "my-owner"
 
-    wrapped_payload = io.wrap_payload_for_raw_storage(payload, target_path)
+    wrapped_payload = io.wrap_payload_for_raw_storage(payload, source, type, owner, target_path)
 
     assert wrapped_payload["payload"] == payload
+    assert wrapped_payload["metadata"]["source"] == source
+    assert wrapped_payload["metadata"]["type"] == type
+    assert wrapped_payload["metadata"]["owner"] == owner
     assert wrapped_payload["target_path"] == target_path
