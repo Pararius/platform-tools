@@ -94,7 +94,12 @@ def test_process_csv_in_blocks(mock_storage):
 
     pd.testing.assert_frame_equal(
         mock_processor.call_args[0][0],
-        pd.DataFrame(data=[{"col1": "value1", "col2": "value2"}, {"col1": "value3", "col2": "value4"}])
+        pd.DataFrame(
+            data=[
+                {"col1": "value1", "col2": "value2"},
+                {"col1": "value3", "col2": "value4"},
+            ]
+        ),
     )
 
     assert mock_processor.call_count == 2
