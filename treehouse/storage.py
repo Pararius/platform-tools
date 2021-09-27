@@ -3,7 +3,7 @@ import csv
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from google.cloud.storage import Client, Blob
 import json
-from pandas import DataFrame
+
 from io import BytesIO, StringIO
 import gcsfs
 from pyarrow import parquet
@@ -53,7 +53,7 @@ def read_jsons_from_bucket(bucket: str, prefix: str, client: Client) -> list:
     return json_list
 
 
-def read_parquet_from_bucket(bucket: str, prefix: str) -> DataFrame:
+def read_parquet_from_bucket(bucket: str, prefix: str) -> object:
     """
     Reads all parquet files from a given bucket's prefix and returns them as a single Pandas DataFrame
     """
@@ -74,7 +74,7 @@ def get_blob(bucket: str, prefix: str, client: Client) -> Blob:
 
 
 def write_dataframe_to_parquet(
-    df: DataFrame,
+    df,
     bucket: str,
     prefix: str,
     client: Client,

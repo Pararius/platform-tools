@@ -51,10 +51,10 @@ setup(
     keywords=[],
     python_requires=">=3.9",
     install_requires=[
-        "pandas>=1.0",
         "google-cloud-pubsub",
         "google-cloud-storage",
         "gcsfs",
         "pyarrow",
+        "pandas",
     ],
 )
