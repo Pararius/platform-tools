@@ -26,7 +26,6 @@ def publish_message(
     transform_callback=None,
 ) -> bool:
     topic_path = publisher.topic_path(project, topic)
-    lines_done = 0
 
     if callable(transform_callback):
         data = transform_callback(data)
@@ -79,6 +78,6 @@ def publish_messages_from_iterator(
 
         # Keep track of progress for debugging
         lines_done += len(chunk)
-        print(f"Published {lines_done} records sofar")
+        print(f"Published {lines_done} records so far")
 
     return True
