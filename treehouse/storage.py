@@ -1,4 +1,5 @@
 import csv
+from functools import partial
 from typing import Callable
 
 from google.cloud.exceptions import GoogleCloudError, NotFound

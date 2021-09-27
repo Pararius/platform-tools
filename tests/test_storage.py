@@ -86,9 +86,16 @@ def test_write_dataframe_to_parquet_failure(mock_storage_client):
 
 @patch("google.cloud.storage")
 def test_process_csv_in_blocks(mock_storage):
+    import pandas as pd
+
     path = "tests/fixture.csv"
     mock_processor = Mock()
     io.process_csv_in_blocks(path, mock_processor)
+
+    pd.testing.assert_frame_equal(
+        mock_processor.call_args[0][0],
+        pd.DataFrame(data=[{"col1": "value1", "col2": "value2"}, {"col1": "value3", "col2": "value4"}])
+    )
 
     assert mock_processor.call_count == 2
 
