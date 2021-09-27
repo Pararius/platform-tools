@@ -109,7 +109,9 @@ def test_wrap_payload_for_raw_storage():
     type = "my-type"
     owner = "my-owner"
 
-    wrapped_payload = io.wrap_payload_for_raw_storage(payload, source, type, owner, target_path)
+    wrapped_payload = io.wrap_payload_for_raw_storage(
+        payload, source, type, owner, target_path
+    )
 
     assert wrapped_payload["payload"] == payload
     assert wrapped_payload["metadata"]["source"] == source

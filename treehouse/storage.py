@@ -102,7 +102,9 @@ def create_csv_reader_from_bucket(
     return reader
 
 
-def wrap_payload_for_raw_storage(payload: dict, source: str, type: str, owner: str, target_path: str) -> dict:
+def wrap_payload_for_raw_storage(
+    payload: dict, source: str, type: str, owner: str, target_path: str
+) -> dict:
     return {
         "payload": payload,
         "metadata": {
