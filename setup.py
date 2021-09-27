@@ -55,6 +55,6 @@ setup(
         "google-cloud-storage",
         "gcsfs",
         "pyarrow",
-        "pandas"
+        "pandas",
     ],
 )

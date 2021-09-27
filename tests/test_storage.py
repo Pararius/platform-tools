@@ -36,6 +36,7 @@ def test_read_jsons_from_bucket(mock_storage):
 @patch("pyarrow.parquet.ParquetDataset")
 def test_read_parquet_from_bucket(mock_parquet_dataset):
     from pandas import DataFrame
+
     bucket = "my-bucket"
     prefix = "my-prefix"
 
@@ -55,6 +56,7 @@ def test_read_parquet_from_bucket(mock_parquet_dataset):
 @patch("google.cloud.storage")
 def test_write_dataframe_to_parquet_success(mock_storage):
     from pandas import DataFrame
+
     df = DataFrame()
     bucket = "my-bucket"
     prefix = "my-prefix"
@@ -67,6 +69,7 @@ def test_write_dataframe_to_parquet_success(mock_storage):
 @patch("google.cloud.storage.Client")
 def test_write_dataframe_to_parquet_failure(mock_storage_client):
     from pandas import DataFrame
+
     df = DataFrame()
     bucket = "my-bucket"
     prefix = "my-prefix"
