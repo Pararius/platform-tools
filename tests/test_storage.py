@@ -1,10 +1,8 @@
 import json
 from csv import DictReader
 
-import pandas
 from gcsfs import GCSFileSystem
 from google.cloud.exceptions import GoogleCloudError
-from pandas import DataFrame
 
 import treehouse.storage as io
 from unittest.mock import Mock, patch, MagicMock
@@ -37,11 +35,12 @@ def test_read_jsons_from_bucket(mock_storage):
 
 @patch("pyarrow.parquet.ParquetDataset")
 def test_read_parquet_from_bucket(mock_parquet_dataset):
+    from pandas import DataFrame
     bucket = "my-bucket"
     prefix = "my-prefix"
 
     mock_read = Mock()
-    mock_read.to_pandas.return_value = pandas.DataFrame()
+    mock_read.to_pandas.return_value = DataFrame()
     mock_ds = Mock()
     mock_ds.read.return_value = mock_read
     mock_parquet_dataset.return_value = mock_ds
@@ -55,7 +54,8 @@ def test_read_parquet_from_bucket(mock_parquet_dataset):
 
 @patch("google.cloud.storage")
 def test_write_dataframe_to_parquet_success(mock_storage):
-    df = pandas.DataFrame()
+    from pandas import DataFrame
+    df = DataFrame()
     bucket = "my-bucket"
     prefix = "my-prefix"
 
@@ -66,7 +66,8 @@ def test_write_dataframe_to_parquet_success(mock_storage):
 
 @patch("google.cloud.storage.Client")
 def test_write_dataframe_to_parquet_failure(mock_storage_client):
-    df = pandas.DataFrame()
+    from pandas import DataFrame
+    df = DataFrame()
     bucket = "my-bucket"
     prefix = "my-prefix"
     mock_bucket = Mock()
