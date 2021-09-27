@@ -106,7 +106,7 @@ def wrap_payload_for_raw_storage(payload: dict, source: str, type: str, owner: s
     return {
         "payload": payload,
         "metadata": {
-            "ingestion_timestamp": dt.now(),
+            "ingestion_timestamp": dt.now().strftime("%Y-%m-%d %H:%M:%S"),
             "source": source,
             "type": type,
             "owner": owner,
