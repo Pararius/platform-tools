@@ -2,6 +2,7 @@ import csv
 
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from google.cloud.storage import Client, Blob
+from datetime import datetime as dt
 import json
 from pandas import DataFrame
 from io import BytesIO, StringIO
@@ -101,8 +102,14 @@ def create_csv_reader_from_bucket(
     return reader
 
 
-def wrap_payload_for_raw_storage(payload: dict, target_path: str) -> dict:
+def wrap_payload_for_raw_storage(payload: dict, source: str, type: str, owner: str, target_path: str) -> dict:
     return {
         "payload": payload,
+        "metadata": {
+            "ingestion_timestamp": dt.now(),
+            "source": source,
+            "type": type,
+            "owner": owner,
+        },
         "target_path": target_path,
     }
