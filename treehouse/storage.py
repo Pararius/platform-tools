@@ -108,7 +108,7 @@ def process_csv_in_blocks(
     """
     import dask.dataframe as dd
 
-    df = dd.read_csv(path, blocksize=block_size, sep=separator, dtype=object)
+    df = dd.read_csv(path, blocksize=block_size, sep=separator, dtype=str)
     df.map_partitions(processor).compute()
 
 
