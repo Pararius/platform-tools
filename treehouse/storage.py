@@ -1,11 +1,9 @@
 import csv
-from functools import partial
 from typing import Callable
-
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from google.cloud.storage import Client, Blob
 import json
-from io import BytesIO, StringIO
+from io import BytesIO
 import gcsfs
 from pyarrow import parquet
 
@@ -110,7 +108,7 @@ def process_csv_in_blocks(
     """
     import dask.dataframe as dd
 
-    df = dd.read_csv(path, blocksize=block_size, sep=separator)
+    df = dd.read_csv(path, blocksize=block_size, sep=separator, dtype=str)
     df.map_partitions(processor).compute()
 
 
