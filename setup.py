@@ -51,6 +51,7 @@ setup(
     keywords=[],
     python_requires=">=3.9",
     install_requires=[
+        "dask",
         "google-cloud-pubsub",
         "google-cloud-storage",
         "gcsfs",

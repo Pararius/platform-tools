@@ -85,25 +85,24 @@ def test_write_dataframe_to_parquet_failure(mock_storage_client):
 
 
 @patch("google.cloud.storage")
-def test_create_csv_reader_from_bucket(mock_storage):
-    bucket = "my-bucket"
-    prefix = "my-prefix"
-    csv_content = "my;csv"
+def test_process_csv_in_blocks(mock_storage):
+    import pandas as pd
 
-    mock_bucket = Mock()
-    mock_blob = Mock()
-    mock_gcs_client = mock_storage.Client.return_value
-    mock_gcs_client.bucket.return_value = mock_bucket
-    mock_bucket.blob.return_value = mock_blob
-    mock_blob.download_as_bytes.return_value = csv_content.encode("UTF8")
+    path = "tests/fixture.csv"
+    mock_processor = Mock()
+    io.process_csv_in_blocks(path, mock_processor)
 
-    reader = io.create_csv_reader_from_bucket(bucket, prefix, mock_gcs_client)
+    pd.testing.assert_frame_equal(
+        mock_processor.call_args[0][0],
+        pd.DataFrame(
+            data=[
+                {"col1": "value1", "col2": "value2"},
+                {"col1": "value3", "col2": "value4"},
+            ]
+        ),
+    )
 
-    mock_gcs_client.bucket.assert_called_with(bucket)
-    mock_bucket.blob.assert_called_with(prefix)
-    mock_blob.download_as_bytes.assert_called_once()
-
-    assert type(reader) == DictReader
+    assert mock_processor.call_count == 2
 
 
 def test_wrap_payload_for_raw_storage():

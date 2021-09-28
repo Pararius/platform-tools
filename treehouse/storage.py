@@ -1,9 +1,10 @@
 import csv
+from functools import partial
+from typing import Callable
 
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from google.cloud.storage import Client, Blob
 import json
-
 from io import BytesIO, StringIO
 import gcsfs
 from pyarrow import parquet
@@ -90,15 +91,27 @@ def write_dataframe_to_parquet(
     return set_blob_contents(blob, buff.getvalue())
 
 
-def create_csv_reader_from_bucket(
-    bucket: str, prefix: str, client: Client
-) -> csv.DictReader:
-    file = get_blob(bucket, prefix, client)
-    scsv = get_blob_contents(file)
-    f = StringIO(scsv)
-    reader = csv.DictReader(f, delimiter=";", quotechar='"')
+def process_csv_in_blocks(
+    path: str,
+    processor: Callable,
+    separator: str = ";",
+    block_size: str = "10MB",
+) -> csv.reader:
+    """
+    Reads a CSV file in blocks to reduce memory consumption.
+    Every block is then passed to the given `processor` as a DataFrame.
 
-    return reader
+    Source: https://medium.com/analytics-vidhya/optimized-ways-to-read-large-csvs-in-python-ab2b36a7914e
+
+    path -- the path to the CSV file (can be a local path or any value that can be handled by Dask such as GCS object IDs)
+    processor -- the callable that is used on every block
+    separator -- the separator used in the targeted CSV
+    block_size -- the maximum size of the blocks passed to the processor
+    """
+    import dask.dataframe as dd
+
+    df = dd.read_csv(path, blocksize=block_size, sep=separator)
+    df.map_partitions(processor).compute()
 
 
 def wrap_payload_for_raw_storage(payload: dict, target_path: str) -> dict:
