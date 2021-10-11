@@ -5,6 +5,7 @@ from google.cloud.storage import Client, Blob
 import json
 from io import BytesIO
 import gcsfs
+import pyarrow
 from pyarrow import parquet
 
 
@@ -90,16 +91,21 @@ def write_dataframe_to_parquet(
     bucket: str,
     prefix: str,
     client: Client,
+    partition_cols: list = None,
 ) -> bool:
     """
-    Writes a Pandas dataframe to a parquet blob in GCP storage
+    Writes a Pandas dataframe to a (partitioned) parquet blob in GCP storage
     """
-    blob = get_blob(bucket, prefix, client)
-    buff = BytesIO()
+    table = pyarrow.Table.from_pandas(df)
 
-    df.to_parquet(buff, index=False)
+    fs = gcsfs.GCSFileSystem()
 
-    return set_blob_contents(blob, buff.getvalue())
+    if partition_cols is None:
+        parquet.write_table(table, f'gs://{bucket}/{prefix}', filesystem=fs)
+    else:
+        parquet.write_to_dataset(table, root_path=f'gs://{bucket}/{prefix}',
+                            partition_cols=partition_cols, filesystem=fs)
+    return True
 
 
 def process_csv_in_blocks(
