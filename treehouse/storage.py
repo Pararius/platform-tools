@@ -54,6 +54,19 @@ def read_jsons_from_bucket(bucket: str, prefix: str, client: Client) -> list:
 
 def read_parquet_from_bucket(bucket: str, prefix: str) -> object:
     """
+    Read a single parquet file from a given bucket's prefix and return as a Pandas DataFrame
+    """
+
+    url = f"gs://{bucket}/{prefix}"
+    fs = gcsfs.GCSFileSystem()
+    ds = parquet.ParquetDataset(url, filesystem=fs)
+    df = ds.read().to_pandas()
+
+    return df
+
+
+def read_multi_parquet_from_bucket(bucket: str, prefix: str) -> object:
+    """
     Reads all parquet files from a given bucket's prefix and returns them as a single Pandas DataFrame
     """
 

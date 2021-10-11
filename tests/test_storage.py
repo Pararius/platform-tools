@@ -53,6 +53,26 @@ def test_read_parquet_from_bucket(mock_parquet_dataset):
         assert type(df) == DataFrame
 
 
+@patch("pyarrow.parquet.ParquetDataset")
+def test_read_multi_parquet_from_bucket(mock_parquet_dataset):
+    from pandas import DataFrame
+
+    bucket = "my-bucket"
+    prefix = "my-prefix"
+
+    mock_read = Mock()
+    mock_read.to_pandas.return_value = DataFrame()
+    mock_ds = Mock()
+    mock_ds.read.return_value = mock_read
+    mock_parquet_dataset.return_value = mock_ds
+
+    # for some reason this needs to use the 'with' construction instead of '@patch' annotation like other tests
+    with patch.object(GCSFileSystem, "glob", return_value=[]):
+        df = io.read_parquet_from_bucket(bucket, prefix)
+
+        assert type(df) == DataFrame
+
+
 @patch("google.cloud.storage")
 def test_write_dataframe_to_parquet_success(mock_storage):
     from pandas import DataFrame
