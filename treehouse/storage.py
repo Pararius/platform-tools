@@ -100,10 +100,14 @@ def write_dataframe_to_parquet(
 
     try:
         if partition_cols is None:
-            parquet.write_table(table, f'gs://{bucket}/{prefix}', filesystem=fs)
+            parquet.write_table(table, f"gs://{bucket}/{prefix}", filesystem=fs)
         else:
-            parquet.write_to_dataset(table, root_path=f'gs://{bucket}/{prefix}',
-                                partition_cols=partition_cols, filesystem=fs)
+            parquet.write_to_dataset(
+                table,
+                root_path=f"gs://{bucket}/{prefix}",
+                partition_cols=partition_cols,
+                filesystem=fs,
+            )
         return True
     except Exception as e:
         print(e)

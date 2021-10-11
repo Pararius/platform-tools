@@ -83,10 +83,13 @@ def test_write_dataframe_to_parquet_success(mock_fs):
     bucket = "my-bucket"
     prefix = "my-prefix"
 
-    with patch.object(parquet, 'write_table', autospec = True):
-        result = io.write_dataframe_to_parquet(df = df, bucket = bucket, prefix = prefix, fs = mock_fs)
+    with patch.object(parquet, "write_table", autospec=True):
+        result = io.write_dataframe_to_parquet(
+            df=df, bucket=bucket, prefix=prefix, fs=mock_fs
+        )
 
         assert result == True
+
 
 @patch("gcsfs.GCSFileSystem", autospec=True)
 def test_write_dataframe_to_parquet_failure(mock_fs):
@@ -99,8 +102,10 @@ def test_write_dataframe_to_parquet_failure(mock_fs):
     write_table = Mock()
     write_table.side_effect = Exception("Not good!")
 
-    with patch.object(parquet, 'write_table', write_table):
-        result = io.write_dataframe_to_parquet(df = df, bucket = bucket, prefix = prefix, fs = mock_fs)
+    with patch.object(parquet, "write_table", write_table):
+        result = io.write_dataframe_to_parquet(
+            df=df, bucket=bucket, prefix=prefix, fs=mock_fs
+        )
 
         assert result == False
 
