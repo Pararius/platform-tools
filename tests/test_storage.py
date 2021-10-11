@@ -1,8 +1,10 @@
 import json
 from csv import DictReader
+from os import write
 
 from gcsfs import GCSFileSystem
 from google.cloud.exceptions import GoogleCloudError
+from pyarrow import parquet
 
 import treehouse.storage as io
 from unittest.mock import Mock, patch, MagicMock
@@ -73,35 +75,34 @@ def test_read_multi_parquet_from_bucket(mock_parquet_dataset):
         assert type(df) == DataFrame
 
 
-@patch("google.cloud.storage")
-def test_write_dataframe_to_parquet_success(mock_storage):
+@patch("gcsfs.GCSFileSystem", autospec=True)
+def test_write_dataframe_to_parquet_success(mock_fs):
     from pandas import DataFrame
 
     df = DataFrame()
     bucket = "my-bucket"
     prefix = "my-prefix"
 
-    result = io.write_dataframe_to_parquet(df, bucket, prefix, mock_storage)
+    with patch.object(parquet, 'write_table', autospec = True):
+        result = io.write_dataframe_to_parquet(df = df, bucket = bucket, prefix = prefix, fs = mock_fs)
 
-    assert result == True
+        assert result == True
 
-
-@patch("google.cloud.storage.Client")
-def test_write_dataframe_to_parquet_failure(mock_storage_client):
+@patch("gcsfs.GCSFileSystem", autospec=True)
+def test_write_dataframe_to_parquet_failure(mock_fs):
     from pandas import DataFrame
 
     df = DataFrame()
     bucket = "my-bucket"
     prefix = "my-prefix"
-    mock_bucket = Mock()
-    mock_blob = Mock()
-    mock_storage_client.bucket.return_value = mock_bucket
-    mock_bucket.blob.return_value = mock_blob
-    mock_blob.upload_from_string.side_effect = GoogleCloudError("Something went wrong")
 
-    result = io.write_dataframe_to_parquet(df, bucket, prefix, mock_storage_client)
+    write_table = Mock()
+    write_table.side_effect = Exception("Not good!")
 
-    assert result == False
+    with patch.object(parquet, 'write_table', write_table):
+        result = io.write_dataframe_to_parquet(df = df, bucket = bucket, prefix = prefix, fs = mock_fs)
+
+        assert result == False
 
 
 @patch("google.cloud.storage")

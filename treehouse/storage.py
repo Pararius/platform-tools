@@ -90,7 +90,7 @@ def write_dataframe_to_parquet(
     df,
     bucket: str,
     prefix: str,
-    client: Client,
+    fs: gcsfs.GCSFileSystem = gcsfs.GCSFileSystem(),
     partition_cols: list = None,
 ) -> bool:
     """
@@ -98,14 +98,16 @@ def write_dataframe_to_parquet(
     """
     table = pyarrow.Table.from_pandas(df)
 
-    fs = gcsfs.GCSFileSystem()
-
-    if partition_cols is None:
-        parquet.write_table(table, f'gs://{bucket}/{prefix}', filesystem=fs)
-    else:
-        parquet.write_to_dataset(table, root_path=f'gs://{bucket}/{prefix}',
-                            partition_cols=partition_cols, filesystem=fs)
-    return True
+    try:
+        if partition_cols is None:
+            parquet.write_table(table, f'gs://{bucket}/{prefix}', filesystem=fs)
+        else:
+            parquet.write_to_dataset(table, root_path=f'gs://{bucket}/{prefix}',
+                                partition_cols=partition_cols, filesystem=fs)
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 
 def process_csv_in_blocks(
