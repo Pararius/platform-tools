@@ -87,7 +87,8 @@ def read_parquet_from_bucket(bucket: str, prefix: str, client: Client = Client()
         df = read_parquet(tmp_file_name)
 
         # Clean up to prevent OOM
-        os.remove(tmp_file_name)
+        if os.path.exists(tmp_file_name):
+            os.remove(tmp_file_name)
 
     return df
 
@@ -111,7 +112,7 @@ def write_dataframe_to_parquet(
         print(e)
         return False
 
-def write_dataframe_to_parquet(
+def write_dataframe_to_partitioned_parquet(
     dataframe: DataFrame,
     partition_col: str,
     bucket: str,
