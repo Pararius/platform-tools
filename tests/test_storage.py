@@ -41,10 +41,16 @@ def test_read_parquet_from_bucket(mock_storage, monkeypatch):
     bucket = "my-bucket"
     prefix = "my-prefix"
 
-    monkeypatch.setattr("treehouse.storage.download_blob_contents", MagicMock(return_value=True))
     monkeypatch.setattr("treehouse.storage.read_parquet", Mock(return_value=DataFrame([])))
 
+    mock_blob = Mock()
+    mock_blob.download_to_filename.return_value = True
+
+    mock_bucket = MagicMock()
+    mock_bucket.blob.return_value = mock_blob
+
     mock_gcs_client = mock_storage.Client.return_value
+    mock_gcs_client.bucket.return_value = mock_bucket
 
     # for some reason this needs to use the 'with' construction instead of '@patch' annotation like other tests
     df = io.read_parquet_from_bucket(bucket, prefix, mock_gcs_client)

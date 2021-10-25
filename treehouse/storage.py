@@ -73,7 +73,7 @@ def read_jsons_from_bucket(bucket: str, prefix: str, client: Client) -> list:
     return json_list
 
 
-def read_parquet_from_bucket(bucket: str, prefix: str, client: Client = Client()) -> DataFrame:
+def read_parquet_from_bucket(bucket: str, prefix: str, client: Client) -> DataFrame:
     """
     Read a single parquet file from a given bucket's prefix and return as a Pandas DataFrame
     """
@@ -117,7 +117,7 @@ def write_dataframe_to_partitioned_parquet(
     partition_col: str,
     bucket: str,
     prefix: str,
-    client: Client = Client(),
+    client: Client,
 ) -> bool:
 
     # temporary function to write partitioned files until bug in gcsfs is fixed
