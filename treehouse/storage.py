@@ -12,10 +12,12 @@ import pyarrow
 from pyarrow import parquet
 from uuid import uuid4
 
+
 def get_blob(bucket: str, prefix: str, client: Client) -> Blob:
     bucket = client.bucket(bucket)
 
     return bucket.blob(prefix)
+
 
 def set_blob_contents(blob: Blob, content) -> bool:
     """
@@ -43,8 +45,11 @@ def get_blob_contents(blob: Blob) -> str:
         print(f"Failed to retrieve contents of the given blob: {exception}")
 
         raise exception
-        
-def download_blob_contents(bucket: str, prefix: str, local_file_name: str, client: Client) -> bool:
+
+
+def download_blob_contents(
+    bucket: str, prefix: str, local_file_name: str, client: Client
+) -> bool:
     """
     Downloads the contents of a blob from the bucket to a local file
     """
@@ -56,6 +61,7 @@ def download_blob_contents(bucket: str, prefix: str, local_file_name: str, clien
         return True
     except:
         return False
+
 
 def read_jsons_from_bucket(bucket: str, prefix: str, client: Client) -> list:
     """
@@ -83,7 +89,7 @@ def read_parquet_from_bucket(bucket: str, prefix: str, client: Client) -> DataFr
     # Download data to local storage
     tmp_file_name = f"/tmp/data-{str(uuid4())}.parquet"
     if download_blob_contents(bucket, prefix, tmp_file_name, client):
-    
+
         df = read_parquet(tmp_file_name)
 
         # Clean up to prevent OOM
@@ -92,11 +98,9 @@ def read_parquet_from_bucket(bucket: str, prefix: str, client: Client) -> DataFr
 
     return df
 
+
 def write_dataframe_to_parquet(
-    df,
-    bucket: str,
-    prefix: str,
-    fs: GCSFileSystem = GCSFileSystem()
+    df, bucket: str, prefix: str, fs: GCSFileSystem = GCSFileSystem()
 ) -> bool:
     """
     Writes a Pandas dataframe to a parquet blob in GCP storage
@@ -111,6 +115,7 @@ def write_dataframe_to_parquet(
     except Exception as e:
         print(e)
         return False
+
 
 def write_dataframe_to_partitioned_parquet(
     dataframe: DataFrame,

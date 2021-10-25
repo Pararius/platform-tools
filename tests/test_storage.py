@@ -34,6 +34,7 @@ def test_read_jsons_from_bucket(mock_storage):
 
     assert jsons == expected_result
 
+
 @patch("google.cloud.storage")
 def test_read_parquet_from_bucket(mock_storage, monkeypatch):
     from pandas import DataFrame
@@ -41,7 +42,9 @@ def test_read_parquet_from_bucket(mock_storage, monkeypatch):
     bucket = "my-bucket"
     prefix = "my-prefix"
 
-    monkeypatch.setattr("treehouse.storage.read_parquet", Mock(return_value=DataFrame([])))
+    monkeypatch.setattr(
+        "treehouse.storage.read_parquet", Mock(return_value=DataFrame([]))
+    )
 
     mock_blob = Mock()
     mock_blob.download_to_filename.return_value = True
