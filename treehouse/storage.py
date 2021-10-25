@@ -3,10 +3,20 @@ from typing import Callable
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from google.cloud.storage import Client, Blob
 import json
+from pandas.core.frame import DataFrame
+from pandas import read_parquet
+import os
 from io import BytesIO
-import gcsfs
+from gcsfs import GCSFileSystem
 import pyarrow
 from pyarrow import parquet
+from uuid import uuid4
+
+
+def get_blob(bucket: str, prefix: str, client: Client) -> Blob:
+    bucket = client.bucket(bucket)
+
+    return bucket.blob(prefix)
 
 
 def set_blob_contents(blob: Blob, content) -> bool:
@@ -37,6 +47,22 @@ def get_blob_contents(blob: Blob) -> str:
         raise exception
 
 
+def download_blob_contents(
+    bucket: str, prefix: str, local_file_name: str, client: Client
+) -> bool:
+    """
+    Downloads the contents of a blob from the bucket to a local file
+    """
+
+    blob = get_blob(bucket, prefix, client)
+    try:
+        blob.download_to_filename(local_file_name)
+
+        return True
+    except:
+        return False
+
+
 def read_jsons_from_bucket(bucket: str, prefix: str, client: Client) -> list:
     """
     Reads all JSON files that are found under the provided prefix and returns a list of JSON objects
@@ -53,65 +79,70 @@ def read_jsons_from_bucket(bucket: str, prefix: str, client: Client) -> list:
     return json_list
 
 
-def read_parquet_from_bucket(bucket: str, prefix: str) -> object:
+def read_parquet_from_bucket(bucket: str, prefix: str, client: Client) -> DataFrame:
     """
     Read a single parquet file from a given bucket's prefix and return as a Pandas DataFrame
     """
 
-    url = f"gs://{bucket}/{prefix}"
-    fs = gcsfs.GCSFileSystem()
-    ds = parquet.ParquetDataset(url, filesystem=fs)
-    df = ds.read().to_pandas()
+    df = DataFrame([])
+
+    # Download data to local storage
+    tmp_file_name = f"/tmp/data-{str(uuid4())}.parquet"
+    if download_blob_contents(bucket, prefix, tmp_file_name, client):
+
+        df = read_parquet(tmp_file_name)
+
+        # Clean up to prevent OOM
+        if os.path.exists(tmp_file_name):
+            os.remove(tmp_file_name)
 
     return df
-
-
-def read_multi_parquet_from_bucket(bucket: str, prefix: str) -> object:
-    """
-    Reads all parquet files from a given bucket's prefix and returns them as a single Pandas DataFrame
-    """
-
-    url = f"gs://{bucket}/{prefix}"
-    fs = gcsfs.GCSFileSystem()
-    files = ["gs://" + path for path in fs.glob(url + "/*.parquet")]
-    ds = parquet.ParquetDataset(files, filesystem=fs)
-    df = ds.read().to_pandas()
-
-    return df
-
-
-def get_blob(bucket: str, prefix: str, client: Client) -> Blob:
-    bucket = client.bucket(bucket)
-
-    return bucket.blob(prefix)
 
 
 def write_dataframe_to_parquet(
-    df,
-    bucket: str,
-    prefix: str,
-    fs: gcsfs.GCSFileSystem = gcsfs.GCSFileSystem(),
-    partition_cols: list = None,
+    df, bucket: str, prefix: str, fs: GCSFileSystem = GCSFileSystem()
 ) -> bool:
     """
-    Writes a Pandas dataframe to a (partitioned) parquet blob in GCP storage
+    Writes a Pandas dataframe to a parquet blob in GCP storage
     """
     table = pyarrow.Table.from_pandas(df)
 
     try:
-        if partition_cols is None:
-            parquet.write_table(table, f"gs://{bucket}/{prefix}", filesystem=fs)
-        else:
-            parquet.write_to_dataset(
-                table,
-                root_path=f"gs://{bucket}/{prefix}",
-                partition_cols=partition_cols,
-                filesystem=fs,
-            )
+
+        parquet.write_table(table, f"gs://{bucket}/{prefix}", filesystem=fs)
+
         return True
     except Exception as e:
         print(e)
         return False
+
+
+def write_dataframe_to_partitioned_parquet(
+    dataframe: DataFrame,
+    partition_col: str,
+    bucket: str,
+    prefix: str,
+    client: Client,
+) -> bool:
+
+    # temporary function to write partitioned files until bug in gcsfs is fixed
+    # issue: https://issuetracker.google.com/issues/202804016
+    # note: this only supports a single partition column (to avoid recursion hell)
+
+    for col_val in dataframe[partition_col].unique():
+
+        _prefix = prefix + f"{partition_col}={col_val}/{str(uuid4())}.parquet"
+
+        blob = get_blob(bucket, _prefix, client)
+        buff = BytesIO()
+
+        dataframe[dataframe[partition_col] == col_val].reset_index(
+            drop=True
+        ).to_parquet(buff, index=False)
+
+        set_blob_contents(blob, buff.getvalue())
+
+    return True
 
 
 def process_csv_in_blocks(

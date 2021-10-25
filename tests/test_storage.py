@@ -35,44 +35,30 @@ def test_read_jsons_from_bucket(mock_storage):
     assert jsons == expected_result
 
 
-@patch("pyarrow.parquet.ParquetDataset")
-def test_read_parquet_from_bucket(mock_parquet_dataset):
+@patch("google.cloud.storage")
+def test_read_parquet_from_bucket(mock_storage, monkeypatch):
     from pandas import DataFrame
 
     bucket = "my-bucket"
     prefix = "my-prefix"
 
-    mock_read = Mock()
-    mock_read.to_pandas.return_value = DataFrame()
-    mock_ds = Mock()
-    mock_ds.read.return_value = mock_read
-    mock_parquet_dataset.return_value = mock_ds
+    monkeypatch.setattr(
+        "treehouse.storage.read_parquet", Mock(return_value=DataFrame([]))
+    )
+
+    mock_blob = Mock()
+    mock_blob.download_to_filename.return_value = True
+
+    mock_bucket = MagicMock()
+    mock_bucket.blob.return_value = mock_blob
+
+    mock_gcs_client = mock_storage.Client.return_value
+    mock_gcs_client.bucket.return_value = mock_bucket
 
     # for some reason this needs to use the 'with' construction instead of '@patch' annotation like other tests
-    with patch.object(GCSFileSystem, "glob", return_value=[]):
-        df = io.read_parquet_from_bucket(bucket, prefix)
+    df = io.read_parquet_from_bucket(bucket, prefix, mock_gcs_client)
 
-        assert type(df) == DataFrame
-
-
-@patch("pyarrow.parquet.ParquetDataset")
-def test_read_multi_parquet_from_bucket(mock_parquet_dataset):
-    from pandas import DataFrame
-
-    bucket = "my-bucket"
-    prefix = "my-prefix"
-
-    mock_read = Mock()
-    mock_read.to_pandas.return_value = DataFrame()
-    mock_ds = Mock()
-    mock_ds.read.return_value = mock_read
-    mock_parquet_dataset.return_value = mock_ds
-
-    # for some reason this needs to use the 'with' construction instead of '@patch' annotation like other tests
-    with patch.object(GCSFileSystem, "glob", return_value=[]):
-        df = io.read_parquet_from_bucket(bucket, prefix)
-
-        assert type(df) == DataFrame
+    assert type(df) == DataFrame
 
 
 @patch("gcsfs.GCSFileSystem", autospec=True)
