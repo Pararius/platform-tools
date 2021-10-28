@@ -92,7 +92,9 @@ def test_write_dataframe_to_parquet_failure(monkeypatch):
     client = MagicMock()
 
     monkeypatch.setattr("treehouse.storage.get_blob", Mock(return_value=blob))
-    monkeypatch.setattr("treehouse.storage.set_blob_contents", Mock(side_effect=Exception('error!')))
+    monkeypatch.setattr(
+        "treehouse.storage.set_blob_contents", Mock(side_effect=Exception("error!"))
+    )
 
     result = io.write_dataframe_to_parquet(
         dataframe=df, bucket=bucket, prefix=prefix, client=client
