@@ -46,6 +46,7 @@ def get_blob_contents(blob: Blob) -> str:
 
         raise exception
 
+
 def get_object_generation(bucket: str, prefix: str, client: Client) -> int:
 
     blob = get_blob(bucket, prefix, client)
