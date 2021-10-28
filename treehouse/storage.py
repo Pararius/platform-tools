@@ -48,7 +48,9 @@ def get_blob_contents(blob: Blob) -> str:
 
 
 def get_object_generation(bucket: str, prefix: str, client: Client) -> int:
-
+    """
+    Returns the generationId of a blob as an integer
+    """
     blob = get_blob(bucket, prefix, client)
 
     return blob.generation
