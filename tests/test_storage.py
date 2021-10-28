@@ -61,39 +61,46 @@ def test_read_parquet_from_bucket(mock_storage, monkeypatch):
     assert type(df) == DataFrame
 
 
-@patch("gcsfs.GCSFileSystem", autospec=True)
-def test_write_dataframe_to_parquet_success(mock_fs):
+def test_write_dataframe_to_parquet_success(monkeypatch):
     from pandas import DataFrame
 
     df = DataFrame()
     bucket = "my-bucket"
     prefix = "my-prefix"
 
-    with patch.object(parquet, "write_table", autospec=True):
-        result = io.write_dataframe_to_parquet(
-            df=df, bucket=bucket, prefix=prefix, fs=mock_fs
-        )
+    blob = Mock()
+    client = MagicMock()
 
-        assert result == True
+    monkeypatch.setattr("treehouse.storage.get_blob", Mock(return_value=blob))
+    monkeypatch.setattr("treehouse.storage.set_blob_contents", Mock(return_value=True))
+
+    result = io.write_dataframe_to_parquet(
+        dataframe=df, bucket=bucket, prefix=prefix, client=client
+    )
+
+    assert result == True
 
 
-@patch("gcsfs.GCSFileSystem", autospec=True)
-def test_write_dataframe_to_parquet_failure(mock_fs):
+def test_write_dataframe_to_parquet_failure(monkeypatch):
     from pandas import DataFrame
 
     df = DataFrame()
     bucket = "my-bucket"
     prefix = "my-prefix"
 
-    write_table = Mock()
-    write_table.side_effect = Exception("Not good!")
+    blob = Mock()
+    client = MagicMock()
 
-    with patch.object(parquet, "write_table", write_table):
-        result = io.write_dataframe_to_parquet(
-            df=df, bucket=bucket, prefix=prefix, fs=mock_fs
-        )
+    monkeypatch.setattr("treehouse.storage.get_blob", Mock(return_value=blob))
+    monkeypatch.setattr(
+        "treehouse.storage.set_blob_contents", Mock(side_effect=Exception("error!"))
+    )
 
-        assert result == False
+    result = io.write_dataframe_to_parquet(
+        dataframe=df, bucket=bucket, prefix=prefix, client=client
+    )
+
+    assert result == False
 
 
 @patch("google.cloud.storage")
