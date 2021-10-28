@@ -51,7 +51,9 @@ def get_object_generation(bucket: str, prefix: str, client: Client) -> int:
     """
     Returns the generationId of a blob as an integer
     """
-    blob = get_blob(bucket, prefix, client)
+    bucket = client.get_bucket(bucket_name=bucket)
+
+    blob = bucket.get_blob(prefix)
 
     return blob.generation
 
