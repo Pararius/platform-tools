@@ -125,7 +125,7 @@ def write_dataframe_to_parquet(
 
         return True
     except Exception as e:
-        print(e.msg)
+        print(e)
         return False
 
 
