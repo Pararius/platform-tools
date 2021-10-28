@@ -100,20 +100,23 @@ def read_parquet_from_bucket(bucket: str, prefix: str, client: Client) -> DataFr
 
 
 def write_dataframe_to_parquet(
-    df, bucket: str, prefix: str, fs: GCSFileSystem = GCSFileSystem()
+    dataframe: DataFrame, bucket: str, prefix: str, client: Client
 ) -> bool:
     """
     Writes a Pandas dataframe to a parquet blob in GCP storage
     """
-    table = pyarrow.Table.from_pandas(df)
 
     try:
+        blob = get_blob(bucket, prefix, client)
+        buff = BytesIO()
 
-        parquet.write_table(table, f"gs://{bucket}/{prefix}", filesystem=fs)
+        dataframe.to_parquet(buff, index=False)
+
+        set_blob_contents(blob, buff.getvalue())
 
         return True
     except Exception as e:
-        print(e)
+        print(e.msg)
         return False
 
 
