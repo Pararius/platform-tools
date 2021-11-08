@@ -1,38 +1,61 @@
-from setuptools import setup, find_packages
-import os, codecs, re
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+"""Setup dot py."""
+from __future__ import absolute_import, print_function
 
-here = os.path.abspath(os.path.dirname(__file__))
+# import re
+from glob import glob
+from os.path import basename, dirname, join, splitext
 
-def read(*parts):
-    with codecs.open(os.path.join(here, *parts), 'r') as fp:
-        return fp.read()
+from setuptools import find_packages, setup
 
-def find_version(*file_paths):
-    version_file = read(*file_paths)
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
-                              version_file, re.M)
-    if version_match:
-        return version_match.group(1)
-    raise RuntimeError("Unable to find version string.")
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+def read(*names, **kwargs):
+    """Read description files."""
+    path = join(dirname(__file__), *names)
+    with open(path, encoding=kwargs.get("encoding", "utf8")) as fh:
+        return fh.read()
+
+
+long_description = "{}".format(
+    read("README.md"),
+)
 
 setup(
-    name='platform_tools',
-    author='Martijn Barendregt',
-    author_email='m.barendregt@pararius.nl',
-    version=find_version('platform_tools','__init__.py'),
-    description='A collection of tools for working with GCP',
+    name="platform-tools",
+    description="A collection of tools for working with GCP",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=find_packages(),
-    install_requires = 
-        [
-            'pandas>=1.0', 
-            'google-cloud-storage',
-            'gcsfs',
-            'pyarrow',
-        ],
-    python_requires='>=3.7',
+    license="MIT License",
+    author="TreeHouse",
+    author_email="dev@treehouse.nl",
+    url="https://github.com/treehouselabs/platform-tools",
+    packages=find_packages("."),
+    package_dir={"": "."},
+    py_modules=[splitext(basename(i))[0] for i in glob("treehouse/*.py")],
+    version="0.1",
+    include_package_data=True,
+    zip_safe=False,
+    classifiers=[
+        # complete classifier list:
+        # http://pypi.python.org/pypi?%3Aaction=list_classifiers
+        "Development Status :: 3 - Alpha",
+        "License :: OSI Approved :: MIT License",
+        "Intended Audience :: Science/Research",
+        "Natural Language :: English",
+        "Operating System :: POSIX",
+        "Operating System :: MacOS",
+        "Operating System :: Microsoft",
+        "Programming Language :: Python :: 3.9",
+    ],
+    keywords=[],
+    python_requires=">=3.9",
+    install_requires=[
+        "dask",
+        "google-cloud-pubsub",
+        "google-cloud-storage",
+        "gcsfs",
+        "pyarrow",
+        "pandas",
+    ],
 )

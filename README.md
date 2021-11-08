@@ -1,3 +1,3 @@
-# Collection of functions/tools for working with GCP
+# platform-tools
 
-Common functionality to interact with GCP components
+Common functions to interact with GCP components on our platform
