@@ -7,7 +7,7 @@ resource "google_logging_metric" "bucket_counter" {
   filter = <<EOT
 resource.type="gcs_bucket"
 resource.labels.bucket_name="${var.bucket_name}"
-protoPayload.resourceName:"${var.prefix}"
+protoPayload.resourceName=~"^${var.prefix}"
 protoPayload.methodName="${var.method}"
 EOT
   name   = format("%s%s", var.name, var.branch_suffix)
