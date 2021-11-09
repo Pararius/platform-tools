@@ -1,6 +1,6 @@
 resource "google_storage_bucket_object" "functioncode" {
-  name   = "function_sources/${var.function_name}${var.branch_suffix}/source.zip"
   bucket = var.bucket_name
+  name   = format("function_sources/%s%s/source.zip", var.function_name, var.branch_suffix)
   source = var.path_to_zip_file
 }
 
