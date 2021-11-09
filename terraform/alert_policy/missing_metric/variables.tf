@@ -9,6 +9,4 @@ variable "logging_metric_name" {}
 variable "method" {
   default = "storage.objects.create"
 }
-variable "name" {}
 variable "notification_channel_name" {}
-variable "prefix" {}
