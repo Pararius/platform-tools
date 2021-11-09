@@ -20,7 +20,6 @@ resource "google_cloudfunctions_function" "function" {
     event_type = var.event_type
     resource   = var.topic_id
   }
-
 }
 
 resource "google_service_account" "cf_sa" {
