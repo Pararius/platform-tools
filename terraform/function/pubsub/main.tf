@@ -23,19 +23,19 @@ resource "google_cloudfunctions_function" "function" {
 }
 
 resource "google_service_account" "cf_sa" {
-  project      = var.project_id
   account_id   = format("gsa-%s", substr(md5(format("%s%s", var.function_name, var.branch_suffix)), 0, 26))
   display_name = "Service account for ${var.function_name} (branch suffix: ${var.branch_suffix})"
+  project      = var.project_id
 }
 
 resource "google_project_iam_member" "cf_sa_pubsub" {
-  project = var.project_id
   member  = "serviceAccount:${google_service_account.cf_sa.email}"
+  project = var.project_id
   role    = "roles/pubsub.publisher"
 }
 
 resource "google_project_iam_member" "cf_sa_user" {
-  project = var.project_id
   member  = "serviceAccount:${google_service_account.cf_sa.email}"
+  project = var.project_id
   role    = "roles/iam.serviceAccountUser"
 }
