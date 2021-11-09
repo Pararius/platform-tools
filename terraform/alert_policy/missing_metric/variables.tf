@@ -6,7 +6,4 @@ variable "enabled" {
   default = true
 }
 variable "logging_metric_name" {}
-variable "method" {
-  default = "storage.objects.create"
-}
 variable "notification_channel_name" {}
