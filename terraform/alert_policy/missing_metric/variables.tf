@@ -1,5 +1,4 @@
 variable "alignment_period" {}
-variable "branch_suffix" {}
 variable "condition_display_name" {}
 variable "display_name" {}
 variable "enabled" {

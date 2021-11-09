@@ -1,5 +1,5 @@
 resource "google_monitoring_alert_policy" "missing_metric" {
-  display_name = "${var.display_name} (branch suffix: ${var.branch_suffix})"
+  display_name = var.display_name
   combiner     = "OR"
   enabled      = var.enabled
   conditions {
