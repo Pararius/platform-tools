@@ -1,4 +1,4 @@
-resource "google_logging_metric" "default" {
+resource "google_logging_metric" "bucket_counter" {
   # Measures the number of times objects are created in a given bucket
   # Exact trigger (creation, modification, etc.) can be adjusted using the "method" variable.
   # This implementation was based on https://cloud.google.com/blog/products/storage-data-transfer/guide-to-setting-up-monitoring-for-object-creation-in-cloud-storage
