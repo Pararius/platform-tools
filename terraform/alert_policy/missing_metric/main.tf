@@ -1,4 +1,4 @@
-resource "google_monitoring_alert_policy" "pararius_legacy_data_alert_policy" {
+resource "google_monitoring_alert_policy" "missing_metric" {
   display_name = "${var.display_name} (branch suffix: ${var.branch_suffix})"
   combiner     = "OR"
   enabled      = var.enabled
