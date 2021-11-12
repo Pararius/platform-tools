@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+
 def get_date_list(base_date, window, date_fmt="%Y-%m-%d"):
     """
     get_date_list(base_date, window, date_fmt)
@@ -13,7 +14,7 @@ def get_date_list(base_date, window, date_fmt="%Y-%m-%d"):
             number of days before and after base_date to include in the list
         - date_fmt: str
             a datetime compatible date format. This determines the format of the input as well as the resulting output
-    
+
     Output:
         - dates: list
             a list of dates centered around base_date
