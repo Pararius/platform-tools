@@ -19,13 +19,13 @@ def get_blob(bucket: str, prefix: str, client: Client) -> Blob:
     return bucket.blob(prefix)
 
 
-def set_blob_contents(blob: Blob, content) -> bool:
+def set_blob_contents(blob: Blob, content: str, content_type: str = "text/plain") -> bool:
     """
     Uploads content for a given blob and suppresses any exceptions that may be thrown
     """
 
     try:
-        blob.upload_from_string(content)
+        blob.upload_from_string(content, content_type=content_type)
 
         return True
     except GoogleCloudError as exception:
