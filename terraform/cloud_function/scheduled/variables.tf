@@ -13,6 +13,7 @@ variable "function_name" {}
 variable "function_runtime" {
   default = "python39"
 }
+variable "function_service_account_email" {}
 variable "function_timeout" { default = 60 }
 variable "iam_invoke_member_email" {}
 variable "project_id" {}
@@ -26,7 +27,6 @@ variable "request_method" {
 variable "retry_count" {
   default = 1
 }
-variable "sa_email" {}
 variable "schedule" {
   description = "See https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules"
 }
