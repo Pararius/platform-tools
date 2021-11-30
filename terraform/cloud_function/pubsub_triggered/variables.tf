@@ -5,7 +5,9 @@ variable "function_entry_point" {
 variable "function_env_vars" {
   default = {}
 }
-variable "function_memory" {}
+variable "function_memory" {
+  default = 128
+}
 variable "function_name" {}
 variable "function_runtime" {
   default = "python39"
