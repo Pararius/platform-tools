@@ -49,7 +49,17 @@ resource "google_cloud_scheduler_job" "casco_listing_job" {
     body        = base64encode(var.request_body)
 
     oidc_token {
-      service_account_email = var.iam_invoke_member
+      service_account_email = var.iam_invoke_member_email
     }
   }
+}
+
+# IAM entry for all users to invoke the function
+resource "google_cloudfunctions_function_iam_member" "invoker" {
+  project        = google_cloudfunctions_function.function.project
+  region         = google_cloudfunctions_function.function.region
+  cloud_function = google_cloudfunctions_function.function.name
+
+  role   = "roles/cloudfunctions.invoker"
+  member = "serviceAccount:${var.iam_invoke_member_email}"
 }

@@ -6,7 +6,7 @@ variable "branch_suffix" {}
 variable "function_env_vars" {}
 variable "function_memory" {}
 variable "function_name" {}
-variable "iam_invoke_member" {}
+variable "iam_invoke_member_email" {}
 variable "project_id" {}
 variable "region" {}
 variable "request_body" {
