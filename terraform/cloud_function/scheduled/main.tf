@@ -22,7 +22,7 @@ resource "google_cloudfunctions_function" "function" {
   trigger_http          = true
   entry_point           = "handler"
 
-  service_account_email         = var.cf_sa_account_email
+  service_account_email         = var.sa_email
   environment_variables         = var.function_env_vars
   vpc_connector                 = var.vpc_connector
   vpc_connector_egress_settings = var.vpc_connector_egress_settings
@@ -32,27 +32,24 @@ resource "google_cloudfunctions_function" "function" {
 
 # Add cloud scheduler job
 resource "google_cloud_scheduler_job" "casco_listing_job" {
-  count = var.branch_suffix == "" ? 1 : 0
-  #Only enable job on production to avoid branches eating each others lunch
-  name        = "casco-listing-job${substr(md5("${var.branch_suffix}"), 0, 26)}"
-  description = "job to pull casco listings from topic"
-
-  schedule = "*/15 * * * *"
+  count       = var.branch_suffix == "" ? 1 : 0 # Only enable job on production to avoid branches eating each others lunch
+  name        = format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
+  schedule    = var.schedule
 
   time_zone        = "Europe/Amsterdam"
-  attempt_deadline = "320s"
+  attempt_deadline = var.attempt_deadline
 
   retry_config {
-    retry_count = 1
+    retry_count = var.retry_count
   }
 
   http_target {
-    http_method = "POST"
-    uri         = module.casco_listing_cf.https_trigger_url
-    body        = base64encode("{}")
+    http_method = var.request_method
+    uri         = google_cloudfunctions_function.function.https_trigger_url
+    body        = base64encode(var.request_body)
 
     oidc_token {
-      service_account_email = google_service_account.cs_sa.email
+      service_account_email = var.iam_invoke_member
     }
   }
 }
