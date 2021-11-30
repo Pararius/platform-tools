@@ -1,6 +1,6 @@
 /*
-Cloud Function triggered by a PubSub event
-Often used to act on objects created in a bucket
+Cloud Function triggered by a message published on a PubSub topic.
+Often used in conjunction with bucket notifications to act on objects created in a bucket.
 */
 
 resource "random_string" "random" {
