@@ -1,3 +1,10 @@
+/*
+Cloud Function invoked by a scheduled job through a HTTP request
+
+Often used to do things that need to be executed at regular intervals,
+like pulling data from external sources or doing aggregations
+*/
+
 resource "random_string" "random" {
   length           = 16
   special          = true
