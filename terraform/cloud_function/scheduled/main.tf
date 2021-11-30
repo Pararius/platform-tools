@@ -13,14 +13,14 @@ resource "google_storage_bucket_object" "functioncode" {
 resource "google_cloudfunctions_function" "function" {
   project = var.project_id
   name    = format("%s%s", var.function_name, var.branch_suffix)
-  runtime = "python39"
+  runtime = var.runtime
   region  = var.region
 
   available_memory_mb   = var.function_memory
   source_archive_bucket = var.bucket_name
   source_archive_object = google_storage_bucket_object.functioncode.name
   trigger_http          = true
-  entry_point           = "handler"
+  entry_point           = var.entry_point
 
   service_account_email         = var.sa_email
   environment_variables         = var.function_env_vars
