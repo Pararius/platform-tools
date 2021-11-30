@@ -1,17 +1,19 @@
-variable "bucket_name" {}
 variable "branch_suffix" {}
-variable "entry_point" {
+variable "function_entry_point" {
   default = "handler"
 }
-variable "function_env_vars" {}
+variable "function_env_vars" {
+  default = {}
+}
 variable "function_memory" {}
 variable "function_name" {}
-variable "project_id" {}
-variable "region" {}
-variable "runtime" {
+variable "function_runtime" {
   default = "python39"
 }
-variable "sa_email" {}
+variable "function_service_account_email" {}
+variable "function_timeout" { default = 60 }
+variable "project_id" {}
+variable "project_region" {}
+variable "pubsub_topic_id" {}
+variable "source_code_bucket_name" {}
 variable "source_code_root_path" {}
-variable "topic_id" {}
-variable "timeout" { default = 60 }
