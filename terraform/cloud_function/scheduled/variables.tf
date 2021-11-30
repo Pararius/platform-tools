@@ -2,16 +2,21 @@ variable "attempt_deadline" {
   default = "320s"
 }
 variable "branch_suffix" {}
-variable "bucket_name" {}
-variable "entry_point" {
+variable "function_entry_point" {
   default = "handler"
 }
-variable "function_env_vars" {}
+variable "function_env_vars" {
+  default = {}
+}
 variable "function_memory" {}
 variable "function_name" {}
+variable "function_runtime" {
+  default = "python39"
+}
+variable "function_timeout" { default = 60 }
 variable "iam_invoke_member_email" {}
 variable "project_id" {}
-variable "region" {}
+variable "project_region" {}
 variable "request_body" {
   default = "{}"
 }
@@ -21,15 +26,12 @@ variable "request_method" {
 variable "retry_count" {
   default = 1
 }
-variable "runtime" {
-  default = "python39"
-}
 variable "sa_email" {}
 variable "schedule" {
   description = "See https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules"
 }
+variable "source_code_bucket_name" {}
 variable "source_code_root_path" {}
-variable "timeout" { default = 60 }
 variable "vpc_connector" {
   default = null
 }

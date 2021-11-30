@@ -13,35 +13,32 @@ resource "random_string" "random" {
 
 resource "google_storage_bucket_object" "functioncode" {
   name   = format("http_function_sources/%s/sourcecode%s.zip", var.function_name, random_string.random.result)
-  bucket = var.bucket_name
+  bucket = var.source_code_bucket_name
   source = "${var.source_code_root_path}/${var.function_name}/${var.function_name}.zip"
 }
 
 resource "google_cloudfunctions_function" "function" {
-  project = var.project_id
-  name    = format("%s%s", var.function_name, var.branch_suffix)
-  runtime = var.runtime
-  region  = var.region
-
-  available_memory_mb   = var.function_memory
-  source_archive_bucket = var.bucket_name
-  source_archive_object = google_storage_bucket_object.functioncode.name
-  trigger_http          = true
-  entry_point           = var.entry_point
-
-  service_account_email         = var.sa_email
+  available_memory_mb           = var.function_memory
+  entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
+  name                          = format("%s%s", var.function_name, var.branch_suffix)
+  project                       = var.project_id
+  region                        = var.project_region
+  runtime                       = var.function_runtime
+  service_account_email         = var.sa_email
+  source_archive_bucket         = var.source_code_bucket_name
+  source_archive_object         = google_storage_bucket_object.functioncode.name
+  timeout                       = var.function_timeout
+  trigger_http                  = true
   vpc_connector                 = var.vpc_connector
   vpc_connector_egress_settings = var.vpc_connector_egress_settings
-
-  timeout = var.timeout
 }
 
 # Add cloud scheduler job
 resource "google_cloud_scheduler_job" "casco_listing_job" {
-  count       = var.branch_suffix == "" ? 1 : 0 # Only enable job on production to avoid branches eating each others lunch
-  name        = format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
-  schedule    = var.schedule
+  count    = var.branch_suffix == "" ? 1 : 0 # Only enable job on production to avoid branches eating each others lunch
+  name     = format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
+  schedule = var.schedule
 
   time_zone        = "Europe/Amsterdam"
   attempt_deadline = var.attempt_deadline
