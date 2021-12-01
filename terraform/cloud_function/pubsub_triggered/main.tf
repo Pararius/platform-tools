@@ -8,7 +8,7 @@ resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
-  name                          = format("%s%s", var.function_name, var.branch_suffix)
+  name                          = format("%s%s-%s", var.function_name, var.branch_suffix, random_string.random.result)
   project                       = var.project_id
   runtime                       = var.function_runtime
   service_account_email         = var.function_service_account_email
@@ -25,7 +25,7 @@ resource "google_cloudfunctions_function" "function" {
 }
 
 resource "random_string" "random" {
-  length           = 16
+  length           = 4
   special          = true
   override_special = "/@£$"
 }
