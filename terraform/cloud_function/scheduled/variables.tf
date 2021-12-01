@@ -7,8 +7,6 @@ variable "function_env_vars" {
 }
 variable "function_memory" {}
 variable "function_name" {}
-variable "function_project_id" {}
-variable "function_project_region" {}
 variable "function_runtime" {
   default = "python39"
 }
@@ -20,6 +18,8 @@ variable "function_vpc_connector" {
 variable "function_vpc_connector_egress_settings" {
   default = null
 }
+variable "project_id" {}
+variable "project_region" {}
 variable "scheduler_attempt_deadline" {
   default = "320s"
 }

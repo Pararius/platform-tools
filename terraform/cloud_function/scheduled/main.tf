@@ -22,8 +22,8 @@ resource "google_cloudfunctions_function" "function" {
   entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
   name                          = format("%s%s", var.function_name, var.branch_suffix)
-  project                       = var.function_project_id
-  region                        = var.function_project_region
+  project                       = var.project_id
+  region                        = var.project_region
   runtime                       = var.function_runtime
   service_account_email         = var.function_service_account_email
   source_archive_bucket         = var.source_code_bucket_name
@@ -36,12 +36,11 @@ resource "google_cloudfunctions_function" "function" {
 
 # Add cloud scheduler job
 resource "google_cloud_scheduler_job" "casco_listing_job" {
-  count    = var.scheduler_enabled ? 1 : 0 # Only enable job on production to avoid branches eating each others lunch
-  name     = format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
-  schedule = var.scheduler_schedule
-
-  time_zone        = "Europe/Amsterdam"
   attempt_deadline = var.scheduler_attempt_deadline
+  count            = var.scheduler_enabled ? 1 : 0
+  name             = format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
+  schedule         = var.scheduler_schedule
+  time_zone        = "Europe/Amsterdam"
 
   retry_config {
     retry_count = var.scheduler_retry_count
@@ -58,7 +57,6 @@ resource "google_cloud_scheduler_job" "casco_listing_job" {
   }
 }
 
-# IAM entry for all users to invoke the function
 resource "google_cloudfunctions_function_iam_member" "invoker" {
   project        = google_cloudfunctions_function.function.project
   region         = google_cloudfunctions_function.function.region
