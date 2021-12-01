@@ -14,8 +14,13 @@ variable "function_runtime" {
 }
 variable "function_service_account_email" {}
 variable "function_timeout" { default = 60 }
+variable "function_vpc_connector" {
+  default = null
+}
+variable "function_vpc_connector_egress_settings" {
+  default = null
+}
 variable "project_id" {}
-variable "project_region" {}
 variable "pubsub_topic_id" {}
 variable "source_code_bucket_name" {}
 variable "source_code_root_path" {}
