@@ -35,7 +35,7 @@ resource "google_cloudfunctions_function" "function" {
 }
 
 # Add cloud scheduler job
-resource "google_cloud_scheduler_job" "casco_listing_job" {
+resource "google_cloud_scheduler_job" "scheduler_job" {
   attempt_deadline = var.scheduler_attempt_deadline
   count            = var.scheduler_enabled ? 1 : 0
   name             = format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
