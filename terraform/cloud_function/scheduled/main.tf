@@ -23,8 +23,7 @@ resource "google_cloudfunctions_function" "function" {
 
 resource "random_string" "random" {
   length           = 4
-  special          = true
-  override_special = "/@£$"
+  special          = false
 }
 
 resource "google_storage_bucket_object" "functioncode" {
