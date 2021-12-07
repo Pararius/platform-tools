@@ -22,6 +22,14 @@ variable "function_vpc_connector_egress_settings" {
 }
 variable "project_id" {}
 variable "project_region" {}
+variable "schedulers" {
+  default = []
+  type = list(object({
+    attempt_deadline = number
+    name = string
+    schedule = string
+  }))
+}
 variable "scheduler_attempt_deadline" {
   default = "320s"
 }

@@ -33,23 +33,24 @@ resource "google_storage_bucket_object" "functioncode" {
 }
 
 resource "google_cloud_scheduler_job" "scheduler_job" {
-  attempt_deadline = var.scheduler_attempt_deadline
-  count            = var.scheduler_enabled ? 1 : 0
-  name             = format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
-  schedule         = var.scheduler_schedule
+  for_each = var.schedulers
+
+  attempt_deadline = each.value.attempt_deadline
+  name             = each.value.name #format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
+  schedule         = each.value.schedule
   time_zone        = "Europe/Amsterdam"
 
   retry_config {
-    retry_count = var.scheduler_retry_count
+    retry_count = each.value.retry_count
   }
 
   http_target {
-    http_method = var.scheduler_request_method
+    body        = base64encode(each.value.request_body)
+    http_method = each.value.request_method
     uri         = google_cloudfunctions_function.function.https_trigger_url
-    body        = base64encode(var.scheduler_request_body)
 
     oidc_token {
-      service_account_email = var.scheduler_service_account_email
+      service_account_email = each.value.service_account_email
     }
   }
 }
