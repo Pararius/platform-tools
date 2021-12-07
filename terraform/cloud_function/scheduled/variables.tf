@@ -28,6 +28,10 @@ variable "schedulers" {
     attempt_deadline = number
     name = string
     schedule = string
+    request_body = string
+    request_method = string
+    retry_count = number
+    service_account_email = string
   }))
 }
 variable "scheduler_attempt_deadline" {
