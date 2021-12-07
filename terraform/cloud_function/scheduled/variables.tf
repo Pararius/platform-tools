@@ -1,3 +1,8 @@
+# must be defined in same file as where we define the variable with optional attrs
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
 variable "branch_suffix" {}
 variable "function_entry_point" {
   default = "handler"
@@ -22,24 +27,17 @@ variable "function_vpc_connector_egress_settings" {
 }
 variable "project_id" {}
 variable "project_region" {}
-variable "scheduler_attempt_deadline" {
-  default = "320s"
-}
-variable "scheduler_enabled" {
-  default = 1
-}
-variable "scheduler_request_body" {
-  default = "{}"
-}
-variable "scheduler_request_method" {
-  default = "POST"
-}
-variable "scheduler_retry_count" {
-  default = 1
-}
-variable "scheduler_schedule" {
-  description = "See https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules"
-}
 variable "scheduler_service_account_email" {}
+variable "schedulers" {
+  default = []
+  type = list(object({
+    attempt_deadline = optional(string)
+    name = string
+    schedule = string
+    request_body = optional(string)
+    request_method = optional(string)
+    retry_count = optional(number)
+  }))
+}
 variable "source_code_bucket_name" {}
 variable "source_code_root_path" {}

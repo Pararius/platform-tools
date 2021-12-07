@@ -4,6 +4,7 @@ Cloud Function invoked by a scheduled job through a HTTP request
 Often used to do things that need to be executed at regular intervals,
 like pulling data from external sources or doing aggregations
 */
+
 resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
@@ -33,20 +34,21 @@ resource "google_storage_bucket_object" "functioncode" {
 }
 
 resource "google_cloud_scheduler_job" "scheduler_job" {
-  attempt_deadline = var.scheduler_attempt_deadline
-  count            = var.scheduler_enabled ? 1 : 0
-  name             = format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
-  schedule         = var.scheduler_schedule
+  for_each = {for scheduler in var.schedulers: scheduler.name => scheduler}
+
+  attempt_deadline = each.value.attempt_deadline != null ? each.value.attempt_deadline : "320s"
+  name             = each.value.name
+  schedule         = each.value.schedule
   time_zone        = "Europe/Amsterdam"
 
   retry_config {
-    retry_count = var.scheduler_retry_count
+    retry_count = each.value.retry_count != null ? each.value.retry_count : 1
   }
 
   http_target {
-    http_method = var.scheduler_request_method
+    body        = base64encode(each.value.request_body != null ? each.value.request_body : "{}")
+    http_method = each.value.request_method != null ? each.value.request_method : "POST"
     uri         = google_cloudfunctions_function.function.https_trigger_url
-    body        = base64encode(var.scheduler_request_body)
 
     oidc_token {
       service_account_email = var.scheduler_service_account_email
