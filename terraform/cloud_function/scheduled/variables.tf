@@ -1,3 +1,8 @@
+# must be defined in same file as where we define the variable with optional attrs
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
 variable "branch_suffix" {}
 variable "function_entry_point" {
   default = "handler"
