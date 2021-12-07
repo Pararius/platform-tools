@@ -34,7 +34,7 @@ resource "google_storage_bucket_object" "functioncode" {
 }
 
 resource "google_cloud_scheduler_job" "scheduler_job" {
-  for_each = var.schedulers
+  for_each = {for scheduler in var.schedulers: scheduler.name => scheduler}
 
   attempt_deadline = each.value.attempt_deadline ? each.value.attempt_deadline : "320s"
   name             = each.value.name
