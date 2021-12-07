@@ -4,6 +4,11 @@ Cloud Function invoked by a scheduled job through a HTTP request
 Often used to do things that need to be executed at regular intervals,
 like pulling data from external sources or doing aggregations
 */
+
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
 resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
