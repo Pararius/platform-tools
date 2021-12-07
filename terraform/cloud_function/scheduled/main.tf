@@ -51,7 +51,7 @@ resource "google_cloud_scheduler_job" "scheduler_job" {
     uri         = google_cloudfunctions_function.function.https_trigger_url
 
     oidc_token {
-      service_account_email = each.value.service_account_email
+      service_account_email = var.scheduler_service_account_email
     }
   }
 }

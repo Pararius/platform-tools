@@ -27,6 +27,7 @@ variable "function_vpc_connector_egress_settings" {
 }
 variable "project_id" {}
 variable "project_region" {}
+variable "scheduler_service_account_email" {}
 variable "schedulers" {
   default = []
   type = list(object({
@@ -36,7 +37,6 @@ variable "schedulers" {
     request_body = optional(string)
     request_method = optional(string)
     retry_count = optional(number)
-    service_account_email = string
   }))
 }
 variable "source_code_bucket_name" {}
