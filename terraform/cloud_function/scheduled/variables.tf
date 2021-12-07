@@ -25,33 +25,14 @@ variable "project_region" {}
 variable "schedulers" {
   default = []
   type = list(object({
-    attempt_deadline = number
+    attempt_deadline = optional(string)
     name = string
     schedule = string
-    request_body = string
-    request_method = string
-    retry_count = number
+    request_body = optional(string)
+    request_method = optional(string)
+    retry_count = optional(number)
     service_account_email = string
   }))
 }
-variable "scheduler_attempt_deadline" {
-  default = "320s"
-}
-variable "scheduler_enabled" {
-  default = 1
-}
-variable "scheduler_request_body" {
-  default = "{}"
-}
-variable "scheduler_request_method" {
-  default = "POST"
-}
-variable "scheduler_retry_count" {
-  default = 1
-}
-variable "scheduler_schedule" {
-  description = "See https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules"
-}
-variable "scheduler_service_account_email" {}
 variable "source_code_bucket_name" {}
 variable "source_code_root_path" {}

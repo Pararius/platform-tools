@@ -35,18 +35,18 @@ resource "google_storage_bucket_object" "functioncode" {
 resource "google_cloud_scheduler_job" "scheduler_job" {
   for_each = var.schedulers
 
-  attempt_deadline = each.value.attempt_deadline
-  name             = each.value.name #format("%s%s", var.function_name, substr(md5(var.branch_suffix), 0, 26))
+  attempt_deadline = each.value.attempt_deadline ? each.value.attempt_deadline : "320s"
+  name             = each.value.name
   schedule         = each.value.schedule
   time_zone        = "Europe/Amsterdam"
 
   retry_config {
-    retry_count = each.value.retry_count
+    retry_count = each.value.retry_count ? each.value.retry_count : 1
   }
 
   http_target {
-    body        = base64encode(each.value.request_body)
-    http_method = each.value.request_method
+    body        = base64encode(each.value.request_body ? each.value.request_body : "{}")
+    http_method = each.value.request_method ? each.value.request_method : "POST"
     uri         = google_cloudfunctions_function.function.https_trigger_url
 
     oidc_token {
