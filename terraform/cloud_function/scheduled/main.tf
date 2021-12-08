@@ -4,7 +4,6 @@ Cloud Function invoked by a scheduled job through a HTTP request
 Often used to do things that need to be executed at regular intervals,
 like pulling data from external sources or doing aggregations
 */
-
 resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
@@ -48,6 +47,11 @@ resource "google_cloud_scheduler_job" "scheduler_job" {
   http_target {
     body        = base64encode(each.value.request_body != null ? each.value.request_body : "{}")
     http_method = each.value.request_method != null ? each.value.request_method : "POST"
+
+    headers = {
+      "Content-Type": "application/json"
+    }
+
     uri         = google_cloudfunctions_function.function.https_trigger_url
 
     oidc_token {
