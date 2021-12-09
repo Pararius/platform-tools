@@ -3,17 +3,11 @@ Cloud Function triggered by a message published on a PubSub topic.
 
 Often used in conjunction with bucket notifications to act on objects created in a bucket.
 */
-locals {
-  # Due to a bug in terraform, GC functions are not (re)deployed even on code changes
-  # In our case we simply force it for every apply using a label with current timestamp as its value
-  renewable_labels = { last_deployed_at = formatdate("YYYYMMDDhhmmss", timestamp()) }
-}
-
 resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
-  labels                        = local.renewable_labels
+  labels                        = { last_deployed_at = formatdate("YYYYMMDDhhmmss", timestamp()) }
   name                          = format("%s%s", var.function_name, var.branch_suffix)
   project                       = var.project_id
   runtime                       = var.function_runtime
