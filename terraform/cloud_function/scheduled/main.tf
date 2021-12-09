@@ -8,7 +8,8 @@ resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
-  name                          = format("%s%s-%s", var.function_name, var.branch_suffix, random_string.random.result)
+  labels                        = { last_deployed_at = formatdate("YYYYMMDDhhmmss", timestamp()) }
+  name                          = format("%s%s", var.function_name, var.branch_suffix)
   project                       = var.project_id
   region                        = var.project_region
   runtime                       = var.function_runtime
@@ -21,19 +22,14 @@ resource "google_cloudfunctions_function" "function" {
   vpc_connector_egress_settings = var.function_vpc_connector_egress_settings
 }
 
-resource "random_string" "random" {
-  length           = 4
-  special          = false
-}
-
 resource "google_storage_bucket_object" "functioncode" {
-  name   = format("http_function_sources/%s/sourcecode%s.zip", var.function_name, random_string.random.result)
+  name   = format("http_function_sources/%s/sourcecode%s.zip", var.function_name, var.branch_suffix)
   bucket = var.source_code_bucket_name
   source = "${var.source_code_root_path}/${var.function_name}/${var.function_name}.zip"
 }
 
 resource "google_cloud_scheduler_job" "scheduler_job" {
-  for_each = {for scheduler in var.schedulers: scheduler.name => scheduler}
+  for_each = { for scheduler in var.schedulers : scheduler.name => scheduler }
 
   attempt_deadline = each.value.attempt_deadline != null ? each.value.attempt_deadline : "320s"
   name             = each.value.name
@@ -49,10 +45,10 @@ resource "google_cloud_scheduler_job" "scheduler_job" {
     http_method = each.value.request_method != null ? each.value.request_method : "POST"
 
     headers = {
-      "Content-Type": "application/json"
+      "Content-Type" : "application/json"
     }
 
-    uri         = google_cloudfunctions_function.function.https_trigger_url
+    uri = google_cloudfunctions_function.function.https_trigger_url
 
     oidc_token {
       service_account_email = var.scheduler_service_account_email

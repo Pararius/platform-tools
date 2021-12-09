@@ -3,12 +3,12 @@ Cloud Function triggered by a message published on a PubSub topic.
 
 Often used in conjunction with bucket notifications to act on objects created in a bucket.
 */
-
 resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
-  name                          = format("%s%s-%s", var.function_name, var.branch_suffix, random_string.random.result)
+  labels                        = { last_deployed_at = formatdate("YYYYMMDDhhmmss", timestamp()) }
+  name                          = format("%s%s", var.function_name, var.branch_suffix)
   project                       = var.project_id
   runtime                       = var.function_runtime
   service_account_email         = var.function_service_account_email
@@ -24,13 +24,9 @@ resource "google_cloudfunctions_function" "function" {
   }
 }
 
-resource "random_string" "random" {
-  length           = 4
-  special          = false
-}
-
 resource "google_storage_bucket_object" "functioncode" {
-  name   = format("pubsub_function_sources/%s/sourcecode%s.zip", var.function_name, random_string.random.result)
+  name   = format("pubsub_function_sources/%s/sourcecode%s.zip", var.function_name, var.branch_suffix)
   bucket = var.source_code_bucket_name
+  labels = local.renewable_labels
   source = format("%s/%s/%s.zip", var.source_code_root_path, var.function_name, var.function_name)
 }

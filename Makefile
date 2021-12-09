@@ -6,9 +6,11 @@ help: ## Show this help message.
 
 cs: ## Checks for code style issues
 	docker-compose run --rm python black --check .
+	terraform -chdir=terraform fmt -check -recursive .
 
 cs-fix: ## Fixes code style issues
 	docker-compose run --rm python black .
+	terraform -chdir=terraform fmt -recursive .
 
 build: ## Builds the image including the setup.py file (run this when you've changed dependencies)
 	docker-compose build python
