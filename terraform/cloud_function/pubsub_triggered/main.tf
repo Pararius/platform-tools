@@ -27,6 +27,5 @@ resource "google_cloudfunctions_function" "function" {
 resource "google_storage_bucket_object" "functioncode" {
   name   = format("pubsub_function_sources/%s/sourcecode%s.zip", var.function_name, var.branch_suffix)
   bucket = var.source_code_bucket_name
-  labels = local.renewable_labels
   source = format("%s/%s/%s.zip", var.source_code_root_path, var.function_name, var.function_name)
 }
