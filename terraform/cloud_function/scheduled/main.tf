@@ -29,7 +29,7 @@ resource "google_storage_bucket_object" "functioncode" {
 }
 
 resource "google_cloud_scheduler_job" "scheduler_job" {
-  for_each = {for scheduler in var.schedulers: scheduler.name => scheduler}
+  for_each = { for scheduler in var.schedulers : scheduler.name => scheduler }
 
   attempt_deadline = each.value.attempt_deadline != null ? each.value.attempt_deadline : "320s"
   name             = each.value.name
@@ -45,10 +45,10 @@ resource "google_cloud_scheduler_job" "scheduler_job" {
     http_method = each.value.request_method != null ? each.value.request_method : "POST"
 
     headers = {
-      "Content-Type": "application/json"
+      "Content-Type" : "application/json"
     }
 
-    uri         = google_cloudfunctions_function.function.https_trigger_url
+    uri = google_cloudfunctions_function.function.https_trigger_url
 
     oidc_token {
       service_account_email = var.scheduler_service_account_email

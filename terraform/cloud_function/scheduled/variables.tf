@@ -32,11 +32,11 @@ variable "schedulers" {
   default = []
   type = list(object({
     attempt_deadline = optional(string)
-    name = string
-    schedule = string
-    request_body = optional(string)
-    request_method = optional(string)
-    retry_count = optional(number)
+    name             = string
+    schedule         = string
+    request_body     = optional(string)
+    request_method   = optional(string)
+    retry_count      = optional(number)
   }))
 }
 variable "source_code_bucket_name" {}
