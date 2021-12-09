@@ -8,7 +8,7 @@ resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
-  labels                        = { last_deployed_at = timestamp() }
+  labels                        = { last_deployed_at = tostring(timestamp()) }
   name                          = format("%s%s", var.function_name, var.branch_suffix)
   project                       = var.project_id
   runtime                       = var.function_runtime
