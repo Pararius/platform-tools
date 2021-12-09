@@ -4,11 +4,17 @@ Cloud Function invoked by a scheduled job through a HTTP request
 Often used to do things that need to be executed at regular intervals,
 like pulling data from external sources or doing aggregations
 */
+locals {
+  # Due to a bug in terraform, GC functions are not (re)deployed even on code changes
+  # In our case we simply force it for every apply using a label with current timestamp as its value
+  renewable_labels = { last_deployed_at = formatdate("YYYYMMDDhhmmss", timestamp()) }
+}
+
 resource "google_cloudfunctions_function" "function" {
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
-  labels                        = { last_deployed_at = tostring(timestamp()) }
+  labels                        = local.renewable_labels
   name                          = format("%s%s", var.function_name, var.branch_suffix)
   project                       = var.project_id
   region                        = var.project_region
@@ -25,6 +31,7 @@ resource "google_cloudfunctions_function" "function" {
 resource "google_storage_bucket_object" "functioncode" {
   name   = format("http_function_sources/%s/sourcecode%s.zip", var.function_name, var.branch_suffix)
   bucket = var.source_code_bucket_name
+  labels = local.renewable_labels
   source = "${var.source_code_root_path}/${var.function_name}/${var.function_name}.zip"
 }
 
