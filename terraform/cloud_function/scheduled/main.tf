@@ -6,7 +6,7 @@ like pulling data from external sources or doing aggregations
 */
 locals {
   timestamp = formatdate("YYMMDDhhmmss", timestamp())
-  root_dir  = abspath(format("%s%s", var.source_code_root_path, var.function_name))
+  root_dir  = abspath(format("%s/%s", var.source_code_root_path, var.function_name))
 }
 
 # Compress source code
