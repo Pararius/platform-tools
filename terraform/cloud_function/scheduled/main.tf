@@ -13,7 +13,7 @@ locals {
 data "archive_file" "source" {
   type        = "zip"
   source_dir  = local.root_dir
-  output_path = "/tmp/function-${local.timestamp}.zip"
+  output_path = format("/tmp/http_function_%s.zip", local.timestamp)
 }
 
 resource "google_storage_bucket_object" "functioncode" {
