@@ -14,10 +14,6 @@ data "archive_file" "source" {
   type        = "zip"
   source_dir  = local.root_dir
   output_path = "/tmp/function-${local.timestamp}.zip"
-  excludes = [
-    format("%s/tests/", local.root_dir),
-    format("%s/.pytest_cache", local.root_dir)
-  ]
 }
 
 resource "google_storage_bucket_object" "functioncode" {
