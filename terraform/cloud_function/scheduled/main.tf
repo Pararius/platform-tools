@@ -15,7 +15,7 @@ data "archive_file" "source" {
   source_dir  = local.root_dir
   output_path = "/tmp/function-${local.timestamp}.zip"
   excludes = [
-    format("%s/tests", local.root_dir),
+    format("%s/tests/", local.root_dir),
     format("%s/.pytest_cache", local.root_dir)
   ]
 }
