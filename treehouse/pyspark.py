@@ -15,7 +15,7 @@ import re
 
 
 def create_spark_session(
-    appName: str, master: str = "yarn", enable_bigquery: bool = False
+    app_name: str, master: str = "yarn", enable_bigquery: bool = False
 ) -> SparkSession:
 
     spark = (
