@@ -55,7 +55,8 @@ setup(
         "google-cloud-pubsub",
         "google-cloud-storage",
         "gcsfs",
-        "pyarrow",
         "pandas",
+        "pyarrow",
+        "pyspark"
     ],
 )
