@@ -28,7 +28,7 @@ resource "google_storage_bucket" "default" {
         iterator = condition
 
         content {
-          age = lookup(condition, "age", null)
+          age = lookup(condition.value, "age", null)
         }
       }
     }
