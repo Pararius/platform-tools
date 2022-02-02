@@ -189,3 +189,53 @@ def wrap_payload_for_raw_storage(payload: dict, target_path: str) -> dict:
         "payload": payload,
         "target_path": target_path,
     }
+
+
+def is_object(bucket: str, prefix: str, client: Client) -> bool:
+    """Validates whether the specified prefix points to an existing object
+
+    Args:
+        bucket (str): bucket
+        prefix (str): object prefix
+        client (Client): google-cloud-storage Client
+
+    Returns:
+        bool: [description]
+    """
+    bucket = client.bucket(bucket)
+    blob = bucket.blob(prefix)
+
+    try:
+        # Get blob info from bucket
+        blob.reload()
+    except:
+        # If we fail to get info, it's not a valid object
+        return False
+
+    # Folders have size 0, proper objects don't
+    return blob.size > 0
+
+
+def is_folder(bucket: str, prefix: str, client: Client) -> bool:
+    """Validates whether the specified prefix points to a folder (as opposed to an object)
+
+    Args:
+        bucket (str): bucket
+        prefix (str): folder prefix
+        client (Client): google-cloud-storage Client
+
+    Returns:
+        bool: [description]
+    """
+    bucket = client.bucket(bucket)
+    blob = bucket.blob(prefix)
+
+    try:
+        # Get blob info from bucket
+        blob.reload()
+    except:
+        # If we fail to get info, it's not a valid object
+        return False
+
+    # Folders have size 0, proper objects don't
+    return blob.size == 0
