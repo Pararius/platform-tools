@@ -159,16 +159,17 @@ def enforce_schema(df: DataFrame, schema: StructType) -> DataFrame:
         ]
     )
 
+
 def flatten_df(nested_df: DataFrame) -> DataFrame:
     """
     flatten_df(nested_df)
 
-    Takes all columns with the Struct datatype from a dataframe and adds the fields as individual 
+    Takes all columns with the Struct datatype from a dataframe and adds the fields as individual
     columns to the original dataframe, using the original column as a prefix
 
     Input:
         - nested_df: Dataframe
-    
+
     Returns:
         - flat_df: Dataframe
     """

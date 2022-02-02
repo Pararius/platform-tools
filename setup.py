@@ -52,11 +52,11 @@ setup(
     python_requires=">=3.9",
     install_requires=[
         "dask",
+        "gcsfs",
         "google-cloud-pubsub",
         "google-cloud-storage",
-        "gcsfs",
         "pandas",
         "pyarrow",
-        "pyspark"
+        "pyspark",
     ],
 )
