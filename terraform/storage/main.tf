@@ -7,15 +7,6 @@ resource "google_storage_bucket" "default" {
   versioning {
     enabled = var.enable_versioning
   }
-
-  dynamic "lifecycle_rule" {
-    for_each = var.lifecycle_rules
-
-    content {
-      action    = lifecycle_rule.value["action"]
-      condition = lifecycle_rule.value["condition"]
-    }
-  }
 }
 
 
