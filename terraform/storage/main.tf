@@ -14,7 +14,7 @@ resource "google_storage_bucket" "default" {
     content {
 
       dynamic "action" {
-        for_each = lookup(rule, "action", [])
+        for_each = lookup(rule.value, "action", [])
         iterator = action
 
         content {
@@ -24,7 +24,7 @@ resource "google_storage_bucket" "default" {
       }
 
       dynamic "condition" {
-        for_each = lookup(rule, "condition", [])
+        for_each = lookup(rule.value, "condition", [])
         iterator = condition
 
         content {
