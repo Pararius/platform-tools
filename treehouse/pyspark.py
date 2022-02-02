@@ -19,7 +19,7 @@ def create_spark_session(
 ) -> SparkSession:
 
     spark = (
-        SparkSession.builder.appName(appName)
+        SparkSession.builder.appName(app_name)
         .master(master)
         .config(
             "spark.sql.parquet.int96RebaseModeInWrite", "LEGACY"
