@@ -7,6 +7,32 @@ resource "google_storage_bucket" "default" {
   versioning {
     enabled = var.enable_versioning
   }
+
+  dynamic "lifecycle_rule" {
+    for_each = var.lifecycle_rules
+    iterator = rule
+    content {
+
+      dynamic "action" {
+        for_each = lookup(rule.value, "action", [])
+        iterator = action
+
+        content {
+          type          = action.value.type
+          storage_class = action.value.storage_class
+        }
+      }
+
+      dynamic "condition" {
+        for_each = lookup(rule.value, "condition", [])
+        iterator = condition
+
+        content {
+          age = lookup(condition.value, "age", null)
+        }
+      }
+    }
+  }
 }
 
 
