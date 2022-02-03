@@ -33,7 +33,7 @@ setup(
     packages=find_packages("."),
     package_dir={"": "."},
     py_modules=[splitext(basename(i))[0] for i in glob("treehouse/*.py")],
-    version="0.1",
+    version="0.2",
     include_package_data=True,
     zip_safe=False,
     classifiers=[
@@ -51,12 +51,10 @@ setup(
     keywords=[],
     python_requires=">=3.9",
     install_requires=[
-        "dask",
-        "gcsfs",
+        "google-cloud-dataproc",
         "google-cloud-pubsub",
         "google-cloud-storage",
         "pandas",
-        "pyarrow",
         "pyspark",
     ],
 )
