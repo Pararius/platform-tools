@@ -7,9 +7,6 @@ from pandas.core.frame import DataFrame
 from pandas import read_parquet
 import os
 from io import BytesIO
-from gcsfs import GCSFileSystem
-import pyarrow
-from pyarrow import parquet
 from uuid import uuid4
 
 
@@ -202,8 +199,7 @@ def is_object(bucket: str, prefix: str, client: Client) -> bool:
     Returns:
         bool: [description]
     """
-    bucket = client.bucket(bucket)
-    blob = bucket.blob(prefix)
+    blob = get_blob(bucket, prefix, client)
 
     try:
         # Get blob info from bucket
@@ -227,8 +223,7 @@ def is_folder(bucket: str, prefix: str, client: Client) -> bool:
     Returns:
         bool: [description]
     """
-    bucket = client.bucket(bucket)
-    blob = bucket.blob(prefix)
+    blob = get_blob(bucket, prefix, client)
 
     try:
         # Get blob info from bucket

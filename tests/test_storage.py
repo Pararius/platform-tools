@@ -1,10 +1,4 @@
 import json
-from csv import DictReader
-from os import write
-
-from gcsfs import GCSFileSystem
-from google.cloud.exceptions import GoogleCloudError
-from pyarrow import parquet
 
 import treehouse.storage as io
 from unittest.mock import Mock, patch, MagicMock
