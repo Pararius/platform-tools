@@ -49,5 +49,5 @@ variable "source_code_bucket_name" {
   type = string
 }
 variable "source_code_root_path" {
-  type = stringÎ
+  type = string
 }
