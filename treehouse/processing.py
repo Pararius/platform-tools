@@ -22,11 +22,11 @@ def submit_dataproc_pyspark_batch(
     service_account: str,
     main_python_file_uri: str,
     python_file_uris: list = [],
+    jar_file_uris: list = [],
     args: list() = [],
     enable_bigquery: bool = False,
 ):
 
-    jar_file_uris = []
     if enable_bigquery:
         jar_file_uris = ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"]
 
