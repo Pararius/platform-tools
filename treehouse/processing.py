@@ -20,6 +20,7 @@ def submit_dataproc_pyspark_batch(
     project_id: str,
     region: str,
     service_account: str,
+    job_name: str,
     main_python_file_uri: str,
     python_file_uris: list = [],
     jar_file_uris: list = [],
@@ -48,7 +49,7 @@ def submit_dataproc_pyspark_batch(
         dataproc.CreateBatchRequest(
             parent=f"projects/{project_id}/locations/{region}",
             batch=batch,
-            batch_id="test",
+            batch_id=job_name,
         )
     )
 
