@@ -51,10 +51,12 @@ setup(
     keywords=[],
     python_requires=">=3.9",
     install_requires=[
+        "dask",
         "google-cloud-dataproc",
         "google-cloud-pubsub",
         "google-cloud-storage",
         "pandas",
+        "pyarrow",
         "pyspark",
     ],
 )
