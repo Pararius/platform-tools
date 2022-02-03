@@ -8,7 +8,7 @@ resource "google_cloudfunctions_function" "function" {
   entry_point                   = var.function_entry_point
   environment_variables         = var.function_env_vars
   labels                        = { last_deployed_at = formatdate("YYYYMMDDhhmmss", timestamp()) }
-  name                          = format("%s%s", var.function_name, var.branch_suffix)
+  name                          = format("%s%s%s", var.function_name_prefix, var.function_name, var.branch_suffix)
   project                       = var.project_id
   runtime                       = var.function_runtime
   service_account_email         = var.function_service_account_email
@@ -25,7 +25,7 @@ resource "google_cloudfunctions_function" "function" {
 }
 
 resource "google_storage_bucket_object" "functioncode" {
-  name   = format("pubsub_function_sources/%s/sourcecode%s.zip", var.function_name, var.branch_suffix)
+  name   = format("pubsub_function_sources/%s%s/sourcecode%s.zip", var.function_name_prefix, var.function_name, var.branch_suffix)
   bucket = var.source_code_bucket_name
   source = format("%s/%s/%s.zip", var.source_code_root_path, var.function_name, var.function_name)
 }
