@@ -11,7 +11,7 @@ def get_parameters(arg_num: int = 1) -> dict:
 
 
 def param_from_prefix(
-    prefix: str, param: str, reg_pattern: str = "([a-zA-Z0-9\.\-\_]+)\/*"
+    prefix: str, param: str, reg_pattern: str = "([a-zA-Z0-9\.\-\_]+)\/"
 ) -> str:
 
     match = re.search(r"\/" + f"{param}={reg_pattern}", prefix)
