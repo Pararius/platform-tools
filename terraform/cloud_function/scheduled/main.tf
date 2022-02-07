@@ -2,17 +2,14 @@
 Cloud Function invoked by a scheduled job through a HTTP request
 
 Often used to do things that need to be executed at regular intervals,
-like pulling data from external sources or doing aggregations
+like pulling data from external sources or doing (small) aggregations
 */
-locals {
-  timestamp = formatdate("YYMMDDhhmmss", timestamp())
-}
 
 # Compress source code
 data "archive_file" "source" {
   type        = "zip"
   source_dir  = abspath(format("%s/%s", var.source_code_root_path, var.function_name))
-  output_path = format("/tmp/http_function_%s.zip", local.timestamp)
+  output_path = format("/tmp/http_function_%s.zip", formatdate("YYMMDDhhmmss", timestamp()))
 }
 
 resource "google_storage_bucket_object" "functioncode" {

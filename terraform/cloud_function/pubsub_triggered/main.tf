@@ -1,17 +1,14 @@
 /*
 Cloud Function triggered by a message published on a PubSub topic.
 
-Often used in conjunction with bucket notifications to act on objects created in a bucket.
+Often used in conjunction with bucket notifications to act on newly created objects.
 */
-locals {
-  timestamp = formatdate("YYMMDDhhmmss", timestamp())
-}
 
 # Compress source code
 data "archive_file" "source" {
   type        = "zip"
   source_dir  = abspath(format("%s/%s", var.source_code_root_path, var.function_name))
-  output_path = format("/tmp/pubsub_function_%s.zip", local.timestamp)
+  output_path = format("/tmp/pubsub_function_%s.zip", formatdate("YYMMDDhhmmss", timestamp()))
 }
 
 resource "google_storage_bucket_object" "functioncode" {
