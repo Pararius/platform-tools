@@ -17,7 +17,7 @@ locals {
 
 # Compress source code
 data "archive_file" "source" {
-#  excludes    = local.excluded_files
+  excludes    = local.excluded_files
   output_path = format("/tmp/%s/http_function_%s.zip", var.function_name, formatdate("YYMMDDhhmmss", timestamp()))
   source_dir  = abspath(format("%s/%s", var.source_code_root_path, var.function_name))
   type        = "zip"
