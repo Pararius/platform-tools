@@ -11,7 +11,7 @@ locals {
     srcFile if contains(local.include_list, srcFile) == false
   ]) : []
   include_list  = fileexists(format("%s/include.lst", local.source_prefix)) ? split(file(format("%s/include.lst", local.source_prefix)), "\n") : []
-  source_files  = fileset(path.module, format("%s/%s/*.*", local.source_prefix))
+  source_files  = fileset(path.module, format("%s/*.*", local.source_prefix))
   source_prefix = format("%s/%s", var.source_code_root_path, var.function_name)
 }
 
