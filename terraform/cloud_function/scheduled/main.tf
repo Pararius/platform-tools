@@ -6,17 +6,18 @@ like pulling data from external sources or doing (small) aggregations
 */
 
 locals {
-  excluded_files_list = length(local.include_list) > 0 ? toset([
+  excluded_files = length(local.include_list) > 0 ? toset([
     for srcFile in local.source_files :
     srcFile if contains(local.include_list, srcFile) == false
   ]) : []
-  include_list = fileexists(format("%s/include.lst", var.source_code_root_path)) ? split(file(format("%s/include.lst", var.source_code_root_path)), "\n") : []
-  source_files = fileset(path.module, format("%s/*.*", var.source_code_root_path))
+  include_list  = fileexists(format("%s/include.lst", local.source_prefix)) ? split(file(format("%s/include.lst", local.source_prefix)), "\n") : []
+  source_files  = fileset(path.module, format("%s/%s/*.*", local.source_prefix))
+  source_prefix = format("%s/%s", var.source_code_root_path, var.function_name)
 }
 
 # Compress source code
 data "archive_file" "source" {
-  excludes    = local.excluded_files_list
+  excludes    = local.excluded_files
   output_path = format("/tmp/%s/http_function_%s.zip", var.function_name, formatdate("YYMMDDhhmmss", timestamp()))
   source_dir  = abspath(format("%s/%s", var.source_code_root_path, var.function_name))
   type        = "zip"
