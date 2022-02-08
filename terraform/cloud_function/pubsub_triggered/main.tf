@@ -8,7 +8,7 @@ Often used in conjunction with bucket notifications to act on newly created obje
 data "archive_file" "source" {
   type        = "zip"
   source_dir  = abspath(format("%s/%s", var.source_code_root_path, var.function_name))
-  output_path = format("/tmp/pubsub_function_%s.zip", formatdate("YYMMDDhhmmss", timestamp()))
+  output_path = format("/tmp/%s/pubsub_function_%s.zip", var.function_name, formatdate("YYMMDDhhmmss", timestamp()))
 }
 
 resource "google_storage_bucket_object" "functioncode" {
