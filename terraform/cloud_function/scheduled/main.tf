@@ -40,7 +40,7 @@ resource "google_cloudfunctions_function" "function" {
   region                        = var.project_region
   runtime                       = var.function_runtime
   service_account_email         = var.function_service_account_email
-  source_archive_bucket         = var.source_code_bucket_name
+  source_archive_bucket         = google_storage_bucket_object.functioncode.bucket
   source_archive_object         = google_storage_bucket_object.functioncode.name
   timeout                       = var.function_timeout
   trigger_http                  = true
