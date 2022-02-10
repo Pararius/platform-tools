@@ -30,7 +30,7 @@ resource "google_storage_bucket_object" "functioncode" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name = format("%s%s", var.function_name, var.branch_suffix)
+  name = format("%s%s%s", var.function_name_prefix, var.function_name, var.branch_suffix)
 
   available_memory_mb           = var.function_memory
   entry_point                   = var.function_entry_point
