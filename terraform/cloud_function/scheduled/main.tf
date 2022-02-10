@@ -46,6 +46,11 @@ resource "google_cloudfunctions_function" "function" {
   trigger_http                  = true
   vpc_connector                 = var.function_vpc_connector
   vpc_connector_egress_settings = var.function_vpc_connector_egress_settings
+
+  timeouts {
+    create = "10m"
+    update = "10m"
+  }
 }
 
 resource "google_cloud_scheduler_job" "scheduler_job" {
