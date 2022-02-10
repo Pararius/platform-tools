@@ -48,4 +48,9 @@ resource "google_cloudfunctions_function" "function" {
     event_type = "google.pubsub.topic.publish"
     resource   = var.pubsub_topic_id
   }
+
+  timeouts {
+    create = "10m"
+    update = "10m"
+  }
 }
