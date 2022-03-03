@@ -58,6 +58,7 @@ setup(
         "google-cloud-storage",
         "pandas",
         "paramiko",
+        "pg8000",
         "pyarrow",
         "pyspark",
         "PyMySQL",

@@ -1,7 +1,17 @@
 from datetime import datetime, timedelta
 
 
-def get_date_list(base_date, window, date_fmt="%Y-%m-%d"):
+def today() -> str:
+    return datetime.today().strftime("%Y-%m-%d")
+
+
+def from_request_or_use_yesterday(request_json: dict, parameter: str = "date") -> str:
+    return request_json.get(
+        parameter, (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
+    )
+
+
+def get_date_list(base_date, window, date_fmt="%Y-%m-%d") -> list:
     """
     get_date_list(base_date, window, date_fmt)
 
