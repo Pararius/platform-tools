@@ -15,7 +15,13 @@ def create_mysql_connection(
     )
 
 
-def create_cloudsql_postgres_connection(user: str, password: str, database: str, socket_dir: str, instance_connection_name: str) -> Engine:
+def create_cloudsql_postgres_connection(
+    instance_connection_name: str,
+    user: str,
+    password: str,
+    database: str,
+    socket_dir="/cloudsql",
+) -> Engine:
     return sqlalchemy.create_engine(
         # Equivalent URL:
         # postgresql+pg8000://<db_user>:<db_pass>@/<db_name>
@@ -28,12 +34,11 @@ def create_cloudsql_postgres_connection(user: str, password: str, database: str,
             password=password,
             database=database,
             query={
-                "unix_sock": "{}/{}/.s.PGSQL.5432".format(
-                    socket_dir, instance_connection_name  # e.g. "/cloudsql"
-                )  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+                "unix_sock": f"{socket_dir}/{instance_connection_name}/.s.PGSQL.5432"
             },
         ),
     )
+
 
 def query_to_csv(
     query: str,
