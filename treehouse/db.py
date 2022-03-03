@@ -3,13 +3,12 @@ import csv
 import pandas as pd
 import sqlalchemy
 from google.cloud.storage import Client as GCSClient
-from sqlalchemy.engine import Engine
 from treehouse.storage import set_blob_contents, get_blob
 
 
 def create_mysql_connection(
     host: str, port: int, username: str, password: str, database: str
-) -> Engine:
+) -> sqlalchemy.engine.Engine:
     return sqlalchemy.create_engine(
         f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
     )
@@ -21,7 +20,7 @@ def create_cloudsql_postgres_connection(
     password: str,
     database: str,
     socket_dir="/cloudsql",
-) -> Engine:
+) -> sqlalchemy.engine.Engine:
     return sqlalchemy.create_engine(
         # Equivalent URL:
         # postgresql+pg8000://<db_user>:<db_pass>@/<db_name>
@@ -44,7 +43,7 @@ def query_to_csv(
     query: str,
     bucket_name: str,
     target_path: str,
-    db_connection: Engine,
+    db_connection: sqlalchemy.engine.Engine,
     storage_client=GCSClient(),
 ):
     df = pd.read_sql(
