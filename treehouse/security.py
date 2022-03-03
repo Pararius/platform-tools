@@ -4,13 +4,19 @@ import sshtunnel
 from google.cloud import secretmanager
 
 
-def get_secret(secret_name: str, project_id: str) -> str:
-    client = secretmanager.SecretManagerServiceClient()
-    response = client.access_secret_version(
-        {"name": f"projects/{project_id}/secrets/{secret_name}/versions/latest"}
-    )
+class SecretManager:
+    def __init__(
+        self, project_id: str, client=secretmanager.SecretManagerServiceClient()
+    ):
+        self.project_id = project_id
+        self.client = client
 
-    return response.payload.data.decode("UTF-8")
+    def get(self, name: str):
+        response = self.client.access_secret_version(
+            {"name": f"projects/{self.project_id}/secrets/{name}/versions/latest"}
+        )
+
+        return response.payload.data.decode("UTF-8")
 
 
 def create_ssh_tunnel(
