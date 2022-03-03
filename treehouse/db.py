@@ -20,7 +20,7 @@ def query_to_csv(
     bucket_name: str,
     target_path: str,
     db_connection: Engine,
-    storage_client: GCSClient,
+    storage_client=GCSClient(),
 ):
     df = pd.read_sql(
         query,
