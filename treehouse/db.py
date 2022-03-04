@@ -46,14 +46,14 @@ def query_to_csv(
     db_connection: sqlalchemy.engine.Engine,
     storage_client=GCSClient(),
     ignore_empty_df: bool = False
-):
+) -> int:
     df = pd.read_sql(
         query,
         con=db_connection,
     )
 
     if ignore_empty_df is True & df.shape[0] == 0:
-        return
+        return 0
 
     buff = io.StringIO()
     df.to_csv(path_or_buf=buff, sep=";", quoting=csv.QUOTE_ALL)
@@ -65,3 +65,5 @@ def query_to_csv(
     )
 
     set_blob_contents(blob, buff.getvalue(), "text/csv")
+
+    return df.shape[0]
