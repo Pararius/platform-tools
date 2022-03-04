@@ -45,7 +45,7 @@ def query_to_csv(
     target_path: str,
     db_connection: sqlalchemy.engine.Engine,
     storage_client=GCSClient(),
-    skip_when_empty: bool = False
+    skip_when_empty: bool = False,
 ) -> int:
     df = pd.read_sql(
         query,
