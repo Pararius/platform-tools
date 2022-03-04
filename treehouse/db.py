@@ -45,11 +45,15 @@ def query_to_csv(
     target_path: str,
     db_connection: sqlalchemy.engine.Engine,
     storage_client=GCSClient(),
+    ignore_empty_df: bool = False
 ):
     df = pd.read_sql(
         query,
         con=db_connection,
     )
+
+    if ignore_empty_df is True & df.shape[0] == 0:
+        return
 
     buff = io.StringIO()
     df.to_csv(path_or_buf=buff, sep=";", quoting=csv.QUOTE_ALL)
