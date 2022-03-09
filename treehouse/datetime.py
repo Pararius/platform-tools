@@ -1,20 +1,28 @@
 from datetime import datetime, timedelta
 
 
-def today() -> str:
-    return datetime.today().strftime("%Y-%m-%d")
+def today(date_format: str) -> str:
+    return datetime.today().strftime(date_format)
 
 
-def from_request_or_use_yesterday(request_json: dict, parameter: str = "date") -> str:
-    return request_json.get(
-        parameter, (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
-    )
+def from_dictionary(
+    dictionary: dict,
+    fallback_days_ago: int = 1,
+    parameter: str = "date",
+    date_format: str = "%Y-%m-%d",
+) -> str:
+    if fallback_days_ago > 0:
+        fallback_value = (
+            datetime.today() - timedelta(days=fallback_days_ago)
+        ).strftime(date_format)
+    else:
+        fallback_value = today(date_format)
+
+    return dictionary.get(parameter, fallback_value)
 
 
 def get_date_list(base_date, window, date_fmt="%Y-%m-%d") -> list:
     """
-    THIS FUNCTION IS DEPRECATED: import from datetime module
-
     get_date_list(base_date, window, date_fmt)
 
     Returns a list of (2 * window + 1) calendar dates centered on base_date
