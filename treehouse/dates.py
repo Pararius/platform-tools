@@ -13,6 +13,8 @@ def from_request_or_use_yesterday(request_json: dict, parameter: str = "date") -
 
 def get_date_list(base_date, window, date_fmt="%Y-%m-%d") -> list:
     """
+    THIS FUNCTION IS DEPRECATED: import from datetime module
+
     get_date_list(base_date, window, date_fmt)
 
     Returns a list of (2 * window + 1) calendar dates centered on base_date
