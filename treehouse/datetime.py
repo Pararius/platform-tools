@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 
-def today(date_format: str) -> str:
+def today(date_format: str = "%Y-%m-%d") -> str:
     """
     today(date_format)
 
