@@ -14,6 +14,14 @@ variable "function_env_vars" {
   type    = map(any)
   default = {}
 }
+variable "function_min_instances" {
+  type    = number
+  default = 0
+}
+variable "function_max_instances" {
+  type    = number
+  default = 1000
+}
 variable "function_memory" {
   type    = number
   default = 128
