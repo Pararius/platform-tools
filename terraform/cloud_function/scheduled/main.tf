@@ -46,6 +46,8 @@ resource "google_cloudfunctions_function" "function" {
   trigger_http                  = true
   vpc_connector                 = var.function_vpc_connector
   vpc_connector_egress_settings = var.function_vpc_connector_egress_settings
+  max_instances                 = var.function_max_instances
+  min_instances                 = var.function_min_instances
 
   timeouts {
     create = "10m"
