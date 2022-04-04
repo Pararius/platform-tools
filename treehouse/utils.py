@@ -10,6 +10,20 @@ def get_parameters(arg_num: int = 1) -> dict:
     return params
 
 
+def params_from_prefix(
+    prefix: str,
+    reg_pattern: str = "(?P<name>[a-zA-Z0-9\.\-\_]+)=(?P<value>[a-zA-Z0-9\.\-\_]+)\/",
+) -> dict:
+
+    pat = re.compile(reg_pattern)
+    params = {}
+
+    for m in pat.finditer(prefix):
+        params[m["name"]] = m["value"]
+
+    return params
+
+
 def param_from_prefix(
     prefix: str, param: str, reg_pattern: str = "([a-zA-Z0-9\.\-\_]+)\/"
 ) -> str:
