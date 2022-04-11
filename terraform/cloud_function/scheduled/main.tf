@@ -61,7 +61,7 @@ resource "google_cloud_scheduler_job" "scheduler_job" {
   attempt_deadline = each.value.attempt_deadline != null ? each.value.attempt_deadline : "320s"
   name             = each.value.name
   schedule         = each.value.schedule
-  time_zone        = "Etc/UTC"
+  time_zone        = "UTC"
 
   retry_config {
     retry_count = each.value.retry_count != null ? each.value.retry_count : 1
