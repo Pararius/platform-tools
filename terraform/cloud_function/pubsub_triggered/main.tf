@@ -43,6 +43,8 @@ resource "google_cloudfunctions_function" "function" {
   timeout                       = var.function_timeout
   vpc_connector                 = var.function_vpc_connector
   vpc_connector_egress_settings = var.function_vpc_connector_egress_settings
+  min_instances                 = var.function_min_instances
+  max_instances                 = var.function_max_instances
 
   event_trigger {
     event_type = "google.pubsub.topic.publish"
@@ -52,5 +54,9 @@ resource "google_cloudfunctions_function" "function" {
   timeouts {
     create = "10m"
     update = "10m"
+  }
+
+  failure_policy {
+    retry = var.function_retry_on_failure
   }
 }

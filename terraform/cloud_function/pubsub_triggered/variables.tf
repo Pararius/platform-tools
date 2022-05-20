@@ -9,9 +9,17 @@ variable "function_env_vars" {
   type    = map(any)
   default = {}
 }
+variable "function_max_instances" {
+  type    = number
+  default = 1000
+}
 variable "function_memory" {
   type    = number
   default = 128
+}
+variable "function_min_instances" {
+  type    = number
+  default = 0
 }
 variable "function_name" {
   type = string
@@ -19,6 +27,10 @@ variable "function_name" {
 variable "function_name_prefix" {
   type    = string
   default = ""
+}
+variable "function_retry_on_failure" {
+  type    = bool
+  default = false
 }
 variable "function_runtime" {
   type    = string

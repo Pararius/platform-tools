@@ -18,4 +18,4 @@ COPY . /app
 
 WORKDIR /app
 
-RUN python setup.py install
+RUN python -m pip install -e .
