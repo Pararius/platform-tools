@@ -49,6 +49,9 @@ resource "google_cloudfunctions_function" "function" {
   event_trigger {
     event_type = "google.pubsub.topic.publish"
     resource   = var.pubsub_topic_id
+    failure_policy {
+      retry = var.function_retry_on_failure
+    }
   }
 
   timeouts {
@@ -56,7 +59,4 @@ resource "google_cloudfunctions_function" "function" {
     update = "10m"
   }
 
-  failure_policy {
-    retry = var.function_retry_on_failure
-  }
 }
