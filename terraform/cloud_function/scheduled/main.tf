@@ -53,10 +53,6 @@ resource "google_cloudfunctions_function" "function" {
     create = "10m"
     update = "10m"
   }
-
-  failure_policy {
-    retry = var.function_retry_on_failure
-  }
 }
 
 resource "google_cloud_scheduler_job" "scheduler_job" {
