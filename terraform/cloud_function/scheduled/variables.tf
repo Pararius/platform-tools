@@ -33,6 +33,10 @@ variable "function_name_prefix" {
   type    = string
   default = ""
 }
+variable "function_retry_on_failure" {
+  type    = bool
+  default = false
+}
 variable "function_runtime" {
   type    = string
   default = "python39"
