@@ -67,3 +67,27 @@ def query_to_csv(
     set_blob_contents(blob, buff.getvalue(), "text/csv")
 
     return df.shape[0]
+
+def query_to_parquet(
+    query: str,
+    bucket_name: str,
+    target_path: str,
+    db_connection: sqlalchemy.engine.Engine,
+    skip_when_empty: bool = False,
+) -> int:
+    df = pd.read_sql(
+        query,
+        con=db_connection,
+    )
+
+    if skip_when_empty is True & df.shape[0] == 0:
+        return 0
+
+    # Convert all columns to string
+    df[[_col for _col in df.columns]] = df[[_col for _col in df.columns]].astype(
+        "string"
+    )
+
+    df.to_parquet(f"gs://{bucket_name}/{target_path}")
+
+    return df.shape[0]
