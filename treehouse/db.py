@@ -68,6 +68,7 @@ def query_to_csv(
 
     return df.shape[0]
 
+
 def query_to_parquet(
     query: str,
     bucket_name: str,
