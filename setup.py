@@ -57,6 +57,7 @@ setup(
         "google-cloud-secret-manager",
         "google-cloud-storage",
         "pandas",
+        "gcsfs",
         "paramiko",
         "pg8000",
         "pyarrow",
