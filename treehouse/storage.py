@@ -89,10 +89,12 @@ def read_jsons_from_bucket(bucket: str, prefix: str, client: Client) -> list:
     return json_list
 
 
-def read_parquet_from_bucket(bucket: str, prefix: str, columns: List[str] = None, client: Client = Client()) -> DataFrame:
+def read_parquet_from_bucket(bucket: str, prefix: str, columns: List[str] = None, client: Client = None) -> DataFrame:
     """
     Read a single parquet file from a given bucket's prefix and return as a Pandas DataFrame
     """
+    if type(client) is None:
+        client = Client()
 
     df = DataFrame([])
 
