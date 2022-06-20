@@ -14,8 +14,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
         setuptools \
 ;
 
-COPY . /app
-
 WORKDIR /app
+
+COPY setup.py /app/setup.py
+COPY README.md /app/README.md
 
 RUN python -m pip install -e .

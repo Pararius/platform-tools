@@ -1,5 +1,5 @@
 import csv
-from typing import Callable
+from typing import Callable, List
 from google.cloud.exceptions import GoogleCloudError, NotFound
 from google.cloud.storage import Client, Blob
 import json
@@ -89,10 +89,15 @@ def read_jsons_from_bucket(bucket: str, prefix: str, client: Client) -> list:
     return json_list
 
 
-def read_parquet_from_bucket(bucket: str, prefix: str, client: Client) -> DataFrame:
+def read_parquet_from_bucket(
+    bucket: str, prefix: str, columns: List[str] = None, client: Client = None
+) -> DataFrame:
     """
     Read a single parquet file from a given bucket's prefix and return as a Pandas DataFrame
     """
+
+    if type(client) is None:
+        client = Client()
 
     df = DataFrame([])
 
@@ -100,7 +105,7 @@ def read_parquet_from_bucket(bucket: str, prefix: str, client: Client) -> DataFr
     tmp_file_name = f"/tmp/data-{str(uuid4())}.parquet"
     if download_blob_contents(bucket, prefix, tmp_file_name, client):
 
-        df = read_parquet(tmp_file_name)
+        df = read_parquet(tmp_file_name, columns=columns)
 
         # Clean up to prevent OOM
         if os.path.exists(tmp_file_name):

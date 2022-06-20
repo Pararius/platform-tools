@@ -50,7 +50,7 @@ def test_read_parquet_from_bucket(mock_storage, monkeypatch):
     mock_gcs_client.bucket.return_value = mock_bucket
 
     # for some reason this needs to use the 'with' construction instead of '@patch' annotation like other tests
-    df = io.read_parquet_from_bucket(bucket, prefix, mock_gcs_client)
+    df = io.read_parquet_from_bucket(bucket, prefix, client=mock_gcs_client)
 
     assert type(df) == DataFrame
 
