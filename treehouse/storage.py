@@ -96,7 +96,7 @@ def read_parquet_from_bucket(
     Read a single parquet file from a given bucket's prefix and return as a Pandas DataFrame
     """
 
-    if type(client) is None:
+    if client is None:
         client = Client()
 
     df = DataFrame([])
