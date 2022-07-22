@@ -46,7 +46,7 @@ setup(
         "Operating System :: POSIX",
         "Operating System :: MacOS",
         "Operating System :: Microsoft",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     keywords=[],
     python_requires=">=3.8",
