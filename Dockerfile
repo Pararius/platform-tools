@@ -1,5 +1,5 @@
 # NOTE: this image is never used in production and only serves to provide a consistent environment for all developers and workflows
-FROM python:3.9.6-slim-buster
+FROM python:3.10.4-slim-buster
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
