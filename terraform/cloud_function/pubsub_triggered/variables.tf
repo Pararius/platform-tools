@@ -34,7 +34,7 @@ variable "function_retry_on_failure" {
 }
 variable "function_runtime" {
   type    = string
-  default = "python39"
+  default = "python310"
 }
 variable "function_service_account_email" {
   type = string
