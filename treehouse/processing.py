@@ -1,4 +1,5 @@
 from google.cloud import dataproc
+import base64
 
 
 def submit_dataproc_workflow(
@@ -32,7 +33,7 @@ def submit_dataproc_pyspark_batch(
         jar_file_uris = ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"]
 
     if len(args) > 0:
-        args = [arg.replace('"', r"\"") for arg in args]
+        args = [base64.b64encode(arg.encode()) for arg in args]
 
     batch = dataproc.Batch(
         {
