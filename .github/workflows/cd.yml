@@ -1,0 +1,69 @@
+---
+name: "Create platform-tools Python artifact"
+
+on:
+  push:
+    paths:
+      - "treehouse/**"
+      - ".github/workflows/cd.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set environment vars
+        run: |
+          echo "PYTHON_VERSION=3.8" >> $GITHUB_ENV
+          echo "PLATFORM_TOOLS_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
+        working-directory: ./
+
+      - name: Deploy to production
+        if: endsWith(github.ref, '/main')
+        run: |
+          echo "DEPLOY_PREFIX=platform_tools/latest/" >> $GITHUB_ENV
+
+      - name: Deploy to feature branch
+        if: endsWith(github.ref, '/main') == false
+        run: |
+          echo "DEPLOY_PREFIX=platform_tools/${GITHUB_REF#refs/heads/}/" >> $GITHUB_ENV        
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Create package with dependencies
+        run: |
+          python setup.py bdist_egg --dist-dir .
+        working-directory: ./
+
+      - name: Rename egg
+        run: |
+          mv platform_tools-${{ env.PLATFORM_TOOLS_VERSION }}-py${{ env.PYTHON_VERSION }}.egg platform_tools.egg
+        working-directory: ./
+
+      - name: GCP Authentication
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: "${{ secrets.GCLOUD_AUTH_TF_RW }}"
+
+      - name: Deploy artifact
+        uses: "google-github-actions/upload-cloud-storage@v0"
+        with:
+          path: "platform_tools.egg"
+          destination: "treehouse-dataplatform-artifacts/${{ env.DEPLOY_PREFIX }}"
+          gzip: false
+
+      - name: Send alert for failing apply on main
+        if: endsWith(github.ref, '/main')
+        uses: ravsamhq/notify-slack-action@v1
+        with:
+          status: ${{ job.status }}
+          notify_when: "failure"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
