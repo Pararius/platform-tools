@@ -16,16 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Python environment
+      - name: Create package with dependencies
         run: |
           python3 -m venv deploy_env
           source deploy_env/bin/activate
-
-      - name: Create package with dependencies
-        run: |
           pip install --upgrade pip
           pip install setuptools wheel testresources
-          pip install -e . -t dist_package --no-cache --ignore-installed
+          pip install -r requirements.txt -t dist_package --no-cache --ignore-installed
         working-directory: ./
 
       - name: Add platform tools code
