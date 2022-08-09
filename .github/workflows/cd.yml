@@ -16,6 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup Python environment
+        run: |
+          python3 -m venv deploy_env
+          source deploy_env/bin/activate
+
       - name: Create package with dependencies
         run: |
           pip install --upgrade pip
