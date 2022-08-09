@@ -46,10 +46,6 @@ jobs:
           path: "platform_tools_latest.zip"
           destination: "treehouse-dataplatform-artifacts/platform_tools/latest/"
 
-      - name: Clean up
-        run: |
-          rm -rf dist_package; rm platform_tools_latest.zip;
-
       - name: Send alert for failing apply on main
         if: endsWith(github.ref, '/main')
         uses: ravsamhq/notify-slack-action@v1
