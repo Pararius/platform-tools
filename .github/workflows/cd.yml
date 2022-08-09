@@ -48,6 +48,7 @@ jobs:
       - name: Get platform-tools version
         run: |
           echo "PLATFORM_TOOLS_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
+        working-directory: ./
 
       - name: Deploy artifact
         uses: "google-github-actions/upload-cloud-storage@v0"
