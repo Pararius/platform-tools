@@ -1,0 +1,41 @@
+---
+name: "Terraform: destroy"
+
+on:
+  delete:
+
+jobs:
+  destroy:
+    if: github.event.ref != 'main' && github.event.ref != 'default'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use branch workspace (feature branch)
+        run: |
+          echo "WORKSPACE=${{ github.event.ref }}" >> $GITHUB_ENV
+
+      # for some reason this (dynamic) JSON string is not possible directly in the `with:` block
+      - name: Put variables in env var
+        run: |
+          echo "VARIABLES_JSON={\"git_branch\": \"${GITHUB_REF#refs/heads/}\", \"platform_tools_artifact_filename\": \"platform_tools.egg\"}" >> $GITHUB_ENV
+
+      - uses: Pararius/action-terraform@0.0.21
+        with:
+          google_credentials: ${{ secrets.GCLOUD_AUTH_TF_RW }}
+          terraform_directory: ./terraform
+          terraform_do_apply: false
+          terraform_do_destroy: true
+          terraform_variables: ${{ env.VARIABLES_JSON }}
+          terraform_workspace: ${{ env.WORKSPACE }}
+
+      - name: Send alert for failing destroy
+        uses: ravsamhq/notify-slack-action@v1
+        with:
+          status: ${{ job.status }}
+          notify_when: "failure"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

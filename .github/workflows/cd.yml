@@ -1,11 +1,13 @@
 ---
-name: "Create platform-tools Python artifact"
+name: "Deployment"
 
 on:
   push:
     paths:
       - "treehouse/**"
       - ".github/workflows/cd.yml"
+      - ".github/workflows/destroy.yml"
+      - "terraform/**"
 
 jobs:
   deploy:
@@ -22,15 +24,15 @@ jobs:
           echo "PLATFORM_TOOLS_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
         working-directory: ./
 
-      - name: Deploy to production
+      - name: Use default workspace (main branch)
         if: endsWith(github.ref, '/main')
         run: |
-          echo "DEPLOY_PREFIX=platform_tools/latest/" >> $GITHUB_ENV
+          echo "WORKSPACE=default" >> $GITHUB_ENV
 
-      - name: Deploy to feature branch
+      - name: Use custom workspace (feature branch)
         if: endsWith(github.ref, '/main') == false
         run: |
-          echo "DEPLOY_PREFIX=platform_tools/${GITHUB_REF#refs/heads/}/" >> $GITHUB_ENV        
+          echo "WORKSPACE=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
@@ -47,17 +49,19 @@ jobs:
           mv platform_tools-${{ env.PLATFORM_TOOLS_VERSION }}-py${{ env.PYTHON_VERSION }}.egg platform_tools.egg
         working-directory: ./
 
-      - name: GCP Authentication
-        uses: "google-github-actions/auth@v0"
-        with:
-          credentials_json: "${{ secrets.GCLOUD_AUTH_TF_RW }}"
+      - name: Put variables in env var
+        run: |
+          echo "VARIABLES_JSON={\"git_branch\": \"${GITHUB_REF#refs/heads/}\", \"platform_tools_artifact_filename\": \"platform_tools.egg\"}" >> $GITHUB_ENV
 
-      - name: Deploy artifact
-        uses: "google-github-actions/upload-cloud-storage@v0"
+      - uses: Pararius/action-terraform@0.0.21
         with:
-          path: "platform_tools.egg"
-          destination: "treehouse-dataplatform-artifacts/${{ env.DEPLOY_PREFIX }}"
-          gzip: false
+          google_credentials: ${{ secrets.GCLOUD_AUTH_TF_RW }}
+          terraform_directory: ./terraform
+          terraform_do_apply: true
+          terraform_do_destroy: false
+          terraform_lock: true
+          terraform_variables: ${{ env.VARIABLES_JSON }}
+          terraform_workspace: ${{ env.WORKSPACE }}
 
       - name: Send alert for failing apply on main
         if: endsWith(github.ref, '/main')
