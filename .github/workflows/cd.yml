@@ -16,10 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set environment variables
+      - name: Set Python version
         run: |
           echo "PYTHON_VERSION=3.8" >> $GITHUB_ENV
-          echo "PLATFORM_TOOLS_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
 
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
@@ -45,6 +44,10 @@ jobs:
         uses: "google-github-actions/auth@v0"
         with:
           credentials_json: "${{ secrets.GCLOUD_AUTH_TF_RW }}"
+
+      - name: Get platform-tools version
+        run: |
+          echo "PLATFORM_TOOLS_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
 
       - name: Deploy artifact
         uses: "google-github-actions/upload-cloud-storage@v0"
