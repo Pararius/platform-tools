@@ -51,7 +51,7 @@ jobs:
 
       - name: Put variables in env var
         run: |
-          echo "VARIABLES_JSON={\"platform_tools_artifact_filename\": \"platform_tools.egg\"}" >> $GITHUB_ENV
+          echo "VARIABLES_JSON={\"git_branch\": \"${GITHUB_REF#refs/heads/}\", \"platform_tools_artifact_filename\": \"platform_tools.egg\"}" >> $GITHUB_ENV
 
       - uses: Pararius/action-terraform@0.0.21
         with:
