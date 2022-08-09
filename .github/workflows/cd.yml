@@ -1,5 +1,5 @@
 ---
-name: "Create platform-tools Python artifact"
+name: "Deployment"
 
 on:
   push:
