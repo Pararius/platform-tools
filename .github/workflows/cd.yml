@@ -47,6 +47,7 @@ jobs:
         with:
           path: "platform_tools.egg"
           destination: "treehouse-dataplatform-artifacts/platform_tools/latest/"
+          gzip: false
 
       - name: Send alert for failing apply on main
         if: endsWith(github.ref, '/main')
