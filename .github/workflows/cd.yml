@@ -35,6 +35,7 @@ jobs:
       - name: Rename egg
         run: |
           mv platform_tools-${{ env.PLATFORM_TOOLS_VERSION }}-py${{ env.PYTHON_VERSION }}.egg platform_tools.egg
+        working-directory: ./
 
       - name: GCP Authentication
         uses: "google-github-actions/auth@v0"
