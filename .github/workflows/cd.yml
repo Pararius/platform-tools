@@ -16,24 +16,30 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set environment variables
+        run: |
+          echo "PYTHON_VERSION=3.8" >> $GITHUB_ENV
+          echo "PLATFORM_TOOLS_VERSION=${python setup.py --version}" >> $GITHUB_ENV
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: "${env.PYTHON_VERSION}"
+
       - name: Create package with dependencies
         run: |
-          python3 -m venv deploy_env
-          source deploy_env/bin/activate
-          pip install --upgrade pip
-          pip install setuptools wheel testresources
-          pip install -r requirements.txt -t dist_package --no-cache --ignore-installed
+          python setup.py bdist_egg --dist-dir .
         working-directory: ./
 
-      - name: Add platform tools code
-        run: |
-          cp -r treehouse dist_package/
-        working-directory: ./
+      # - name: Add platform tools code
+      #   run: |
+      #     cp -r treehouse dist_package/
+      #   working-directory: ./
 
-      - name: Zip package and remove unwanted dependencies
-        run: |
-          cd dist_package && zip -x "google*" -x "pyspark*" -x "*.git*" -x "*.DS_Store" -x "*.pyc" -x "*/*__pycache__*/" -x ".idea*" -x ".vscode*" -r ../platform_tools_latest.zip .
-        working-directory: ./
+      # - name: Zip package and remove unwanted dependencies
+      #   run: |
+      #     cd dist_package && zip -x "google*" -x "pyspark*" -x "*.git*" -x "*.DS_Store" -x "*.pyc" -x "*/*__pycache__*/" -x ".idea*" -x ".vscode*" -r ../platform_tools_latest.zip .
+      #   working-directory: ./
 
       - name: GCP Authentication
         uses: "google-github-actions/auth@v0"
@@ -43,7 +49,7 @@ jobs:
       - name: Deploy artifact
         uses: "google-github-actions/upload-cloud-storage@v0"
         with:
-          path: "platform_tools_latest.zip"
+          path: "platform_tools-${env.PLATFORM_TOOLS_VERSION}-py${env.PYTHON_VERSION}.egg"
           destination: "treehouse-dataplatform-artifacts/platform_tools/latest/"
 
       - name: Send alert for failing apply on main
