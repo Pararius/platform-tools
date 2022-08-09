@@ -16,16 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use default workspace (main branch)
-        if: endsWith(github.ref, '/main')
-        run: |
-          echo "WORKSPACE=default" >> $GITHUB_ENV
-
-      - name: Use custom workspace (feature branch)
-        if: endsWith(github.ref, '/main') == false
-        run: |
-          echo "WORKSPACE=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-
       - name: Create package with dependencies
         run: |
           pip install --upgrade pip
