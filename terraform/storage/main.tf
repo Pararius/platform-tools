@@ -19,7 +19,7 @@ resource "google_storage_bucket" "default" {
 
         content {
           type          = action.value.type
-          storage_class = action.value.storage_class
+          storage_class = lookup(action.value, "storage_class", null)
         }
       }
 
