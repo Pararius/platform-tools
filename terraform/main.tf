@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">=1.0.0"
+  required_version = ">=1.3.0"
   backend "gcs" {
     bucket = "treehouse-dataplatform-tfstate"
     prefix = "platform-tools"
