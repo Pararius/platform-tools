@@ -1,3 +1,6 @@
+terraform {
+  required_version = ">= 1.3.0"
+}
 variable "branch_suffix" {
   type = string
 }
