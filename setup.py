@@ -53,6 +53,7 @@ setup(
     install_requires=[
         "dask",
         "google-cloud-dataproc",
+        "google-cloud-firestore",
         "google-cloud-pubsub",
         "google-cloud-secret-manager",
         "google-cloud-storage",
