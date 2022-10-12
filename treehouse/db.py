@@ -48,7 +48,7 @@ def create_cloudsql_mysql_connection(
 ) -> sqlalchemy.engine.Engine:
     return sqlalchemy.create_engine(
         sqlalchemy.engine.url.URL.create(
-            drivername="mysql",
+            drivername="mysql+pymysql",
             username=user,
             password=password,
             database=database,
