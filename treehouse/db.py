@@ -39,6 +39,24 @@ def create_cloudsql_postgres_connection(
     )
 
 
+def create_cloudsql_mysql_connection(
+    instance_connection_name: str,
+    user: str,
+    password: str,
+    database: str,
+    socket_dir="/cloudsql",
+) -> sqlalchemy.engine.Engine:
+    return sqlalchemy.create_engine(
+        sqlalchemy.engine.url.URL.create(
+            drivername="mysql",
+            username=user,
+            password=password,
+            database=database,
+            query={"unix_sock": f"{socket_dir}/{instance_connection_name}/"},
+        ),
+    )
+
+
 def query_to_csv(
     query: str,
     bucket_name: str,
