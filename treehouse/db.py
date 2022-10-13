@@ -52,7 +52,7 @@ def create_cloudsql_mysql_connection(
             username=user,
             password=password,
             database=database,
-            query={"unix_socket": f"{socket_dir}/{instance_connection_name}/"},
+            query={"unix_socket": f"{socket_dir}/{instance_connection_name}"},
         ),
     )
 
