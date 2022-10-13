@@ -59,6 +59,7 @@ setup(
         "google-cloud-storage",
         "pandas",
         "gcsfs",
+        "mysqlclient",
         "paramiko",
         "pg8000",
         "pyarrow",
