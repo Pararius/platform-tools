@@ -228,14 +228,22 @@ def is_folder(bucket: str, prefix: str, client: Client) -> bool:
     Returns:
         bool: [description]
     """
+
     blob = get_blob(bucket, prefix, client)
 
     try:
         # Get blob info from bucket
         blob.reload()
     except:
-        # If we fail to get info, it's not a valid object
-        return False
+
+        # The current approach fails for larger "folders" of data
+        # TODO: find better way to handle this
+
+        # Temp fix
+        return prefix[-1] == "/"
+
+        # # If we fail to get info, it's not a valid object
+        # return False
 
     # Folders have size 0, proper objects don't
     return blob.size == 0
