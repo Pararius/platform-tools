@@ -201,15 +201,15 @@ def create_spark_session(app_name: str, enable_bigquery: bool = True) -> SparkSe
         .config(
             "spark.sql.parquet.int96RebaseModeInRead", "CORRECTED"
         )  # Backwards comp. for older Spark versions
-        .config(
-            "spark.sql.legacy.parquet.int96RebaseModeInRead", "CORRECTED"
-        )  # Backwards comp. for older Spark versions
+        # .config(
+        #     "spark.sql.legacy.parquet.int96RebaseModeInRead", "CORRECTED"
+        # )  # Backwards comp. for older Spark versions
         .config(
             "spark.sql.parquet.int96RebaseModeInWrite", "CORRECTED"
         )  # Backwards comp. for older Spark versions
-        .config(
-            "spark.sql.legacy.parquet.int96RebaseModeInWrite", "CORRECTED"
-        )  # Backwards comp. for older Spark versions
+        # .config(
+        #     "spark.sql.legacy.parquet.int96RebaseModeInWrite", "CORRECTED"
+        # )  # Backwards comp. for older Spark versions
         .config(
             "mapreduce.fileoutputcommitter.marksuccessfuljobs", "false"
         )  # Don't write _SUCCESS files
