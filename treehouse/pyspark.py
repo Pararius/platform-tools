@@ -199,14 +199,16 @@ def create_spark_session(app_name: str, enable_bigquery: bool = True) -> SparkSe
     spark = (
         SparkSession.builder.appName(app_name)
         .config(
-            "spark.sql.parquet.int96RebaseModeInRead", "CORRECTED"
+            "spark.sql.parquet.int96RebaseModeInRead", "LEGACY"
         )  # Backwards comp. for older Spark versions
+        .config("spark.sql.parquet.datetimeRebaseModeInRead", "LEGACY")
         # .config(
         #     "spark.sql.legacy.parquet.int96RebaseModeInRead", "CORRECTED"
         # )  # Backwards comp. for older Spark versions
         .config(
-            "spark.sql.parquet.int96RebaseModeInWrite", "CORRECTED"
+            "spark.sql.parquet.int96RebaseModeInWrite", "LEGACY"
         )  # Backwards comp. for older Spark versions
+        .config("spark.sql.parquet.datetimeRebaseModeInWrite", "LEGACY")
         # .config(
         #     "spark.sql.legacy.parquet.int96RebaseModeInWrite", "CORRECTED"
         # )  # Backwards comp. for older Spark versions
