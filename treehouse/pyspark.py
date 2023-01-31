@@ -333,7 +333,7 @@ def map_strict(
     ).replace(mapping, subset=target_col)
 
 
-def safe_col(df: DataFrame, path) -> Column:
+def safe_col(df: DataFrame, path: str) -> Column:
     try:
         var = df[path]
         return col(path)
