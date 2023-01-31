@@ -18,6 +18,7 @@ import json
 import sys
 from urllib.parse import urlparse
 import base64
+from pyspark.sql.utils import AnalysisException
 
 
 def get_spark_schema(dict_schema):
