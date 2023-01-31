@@ -331,3 +331,11 @@ def map_strict(
         target_col,
         when(source_col.isin(list(mapping.keys())), source_col),
     ).replace(mapping, subset=target_col)
+
+
+def safe_col(df: DataFrame, path: str) -> Column:
+    try:
+        var = df[path]
+        return col(path)
+    except AnalysisException:
+        return lit(None)
