@@ -94,6 +94,10 @@ def query_to_parquet(
     db_connection: sqlalchemy.engine.Engine,
     skip_when_empty: bool = False,
 ) -> int:
+
+    # Due to a bug with SQLAlchemy and Pandas this fix is needed for now
+    query = sqlalchemy.text(query)
+
     df = pd.read_sql(
         query,
         con=db_connection,
