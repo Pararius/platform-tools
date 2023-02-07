@@ -95,12 +95,9 @@ def query_to_parquet(
     skip_when_empty: bool = False,
 ) -> int:
 
-    # Due to a bug with SQLAlchemy and Pandas this fix is needed for now
-    query = sqlalchemy.text(query)
-
-    df = pd.read_sql(
-        query,
-        con=db_connection,
+    df = pd.read_sql_query(
+        sql=sqlalchemy.text(query),
+        con=db_connection.connect(),
     )
 
     if skip_when_empty is True & df.shape[0] == 0:
