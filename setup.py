@@ -66,6 +66,6 @@ setup(
         "pyspark",
         "PyMySQL",
         "sshtunnel",
-        "SQLAlchemy==1.4",
+        "SQLAlchemy<=2.0",
     ],
 )
