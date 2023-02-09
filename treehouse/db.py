@@ -94,7 +94,6 @@ def query_to_parquet(
     db_connection: sqlalchemy.engine.Engine,
     skip_when_empty: bool = False,
 ) -> int:
-
     df = pd.read_sql_query(
         sql=sqlalchemy.text(query),
         con=db_connection.connect(),
