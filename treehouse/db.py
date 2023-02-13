@@ -61,7 +61,7 @@ def query_to_df(
     query: str,
     db_connection: sqlalchemy.engine.Engine,
 ) -> pd.DataFrame:
-    return pd.read_sql(
+    return pd.read_sql_query(
         sql=sqlalchemy.text(query),
         con=db_connection.connect(),
     )
