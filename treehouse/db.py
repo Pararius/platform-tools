@@ -57,6 +57,16 @@ def create_cloudsql_mysql_connection(
     )
 
 
+def query_to_df(
+    query: str,
+    db_connection: sqlalchemy.engine.Engine,
+) -> pd.DataFrame:
+    return pd.read_sql_query(
+        sql=sqlalchemy.text(query),
+        con=db_connection.connect(),
+    )
+
+
 def query_to_csv(
     query: str,
     bucket_name: str,
@@ -65,10 +75,7 @@ def query_to_csv(
     storage_client=GCSClient(),
     skip_when_empty: bool = False,
 ) -> int:
-    df = pd.read_sql(
-        query,
-        con=db_connection,
-    )
+    df = query_to_df(query, db_connection)
 
     if skip_when_empty is True & df.shape[0] == 0:
         return 0
@@ -94,11 +101,7 @@ def query_to_parquet(
     db_connection: sqlalchemy.engine.Engine,
     skip_when_empty: bool = False,
 ) -> int:
-
-    df = pd.read_sql_query(
-        sql=sqlalchemy.text(query),
-        con=db_connection.connect(),
-    )
+    df = query_to_df(query, db_connection)
 
     if skip_when_empty is True & df.shape[0] == 0:
         return 0

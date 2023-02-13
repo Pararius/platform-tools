@@ -104,7 +104,6 @@ def read_parquet_from_bucket(
     # Download data to local storage
     tmp_file_name = f"/tmp/data-{str(uuid4())}.parquet"
     if download_blob_contents(bucket, prefix, tmp_file_name, client):
-
         df = read_parquet(tmp_file_name, columns=columns)
 
         # Clean up to prevent OOM
@@ -142,13 +141,11 @@ def write_dataframe_to_partitioned_parquet(
     prefix: str,
     client: Client,
 ) -> bool:
-
     # temporary function to write partitioned files until bug in gcsfs is fixed
     # issue: https://issuetracker.google.com/issues/202804016
     # note: this only supports a single partition column (to avoid recursion hell)
 
     for col_val in dataframe[partition_col].unique():
-
         _prefix = prefix + f"{partition_col}={col_val}/{str(uuid4())}.parquet"
 
         blob = get_blob(bucket, _prefix, client)
@@ -235,7 +232,6 @@ def is_folder(bucket: str, prefix: str, client: Client) -> bool:
         # Get blob info from bucket
         blob.reload()
     except:
-
         # The current approach fails for larger "folders" of data
         # TODO: find better way to handle this
 

@@ -14,7 +14,6 @@ def params_from_prefix(
     prefix: str,
     reg_pattern: str = "(?P<name>[a-zA-Z0-9\.\-\_]+)=(?P<value>[a-zA-Z0-9\.\-\_]+)\/",
 ) -> dict:
-
     pat = re.compile(reg_pattern)
     params = {}
 
@@ -27,7 +26,6 @@ def params_from_prefix(
 def param_from_prefix(
     prefix: str, param: str, reg_pattern: str = "([a-zA-Z0-9\.\-\_]+)\/"
 ) -> str:
-
     match = re.search(r"\/" + f"{param}={reg_pattern}", prefix)
 
     if not match or not match.group(1):

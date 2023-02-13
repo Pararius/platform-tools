@@ -79,7 +79,6 @@ def get_spark_schema(dict_schema):
     spark_schema = []
 
     for col, type in dict_schema.items():
-
         if spark_type := __get_dtype(type):
             spark_schema.append(StructField(col, spark_type, True))
         else:
@@ -324,7 +323,6 @@ def extract_fragment(uri: str) -> str:
 def map_strict(
     df: DataFrame, source_col: Union[str, Column], target_col: str, mapping: dict
 ) -> DataFrame:
-
     if isinstance(source_col, str):
         source_col = df[source_col]
 
