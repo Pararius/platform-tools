@@ -52,3 +52,13 @@ def interval_to_timestamp_range(interval: str) -> list:
         ]
 
     raise Exception(f"Unknown interval: {interval}")
+
+
+def create_loaded_path(bucket_with_prefix: str, type: str, source: str, extraction_ts: str) -> str:
+    return \
+        f"gs://{bucket_with_prefix.strip('/')}" \
+        f"/format=parquet" \
+        f"/type={type}" \
+        f"/source={source}" \
+        f"/extraction_ts={extraction_ts}" \
+        f"/{uuid.uuid4()}.parquet"
