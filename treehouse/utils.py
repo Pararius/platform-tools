@@ -83,19 +83,3 @@ def create_loaded_path(bucket_with_prefix: str, type: str, source: str, extracti
         f"/source={source}" \
         f"/extraction_ts={extraction_ts}" \
         f"/{uuid.uuid4()}.parquet"
-
-
-def report_load_finished(publisher: pubsub_v1.PublisherClient, topic_path: str, loaded_path: str, data_type: str, data_source: str, data_extraction_ts: str):
-    data_str = loaded_path
-    # Data must be a bytestring
-    data = data_str.encode("utf-8")
-    # Add two attributes, origin and username, to the message
-    future = publisher.publish(
-        topic_path,
-        data,
-        source=data_source,
-        type=data_type,
-        extraction_ts=data_extraction_ts,
-    )
-
-    future.result()  # force wait for result
