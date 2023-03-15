@@ -53,9 +53,9 @@ def interval_to_timestamp_range(interval: str) -> Tuple[datetime.datetime, datet
     raise Exception(f"Unknown interval: {interval}")
 
 
-def create_extracted_object_path(prefix: str, type: str, source: str, extraction_ts: str) -> str:
+def create_extracted_object_prefix(prefix: str, type: str, source: str, extraction_ts: str) -> str:
     return \
-        f"/{prefix.strip('/')}/" if prefix != "" else "" \
+        f"{prefix.strip('/')}/" if prefix != "" else "" \
         f"/format=json" \
         f"/type={type}" \
         f"/source={source}" \
@@ -63,9 +63,9 @@ def create_extracted_object_path(prefix: str, type: str, source: str, extraction
         f"/{uuid.uuid4()}.json"
 
 
-def create_extracted_objects_path(prefix: str, type: str, source: str, extraction_ts: str) -> str:
+def create_extracted_objects_path(bucket_with_prefix: str, type: str, source: str, extraction_ts: str) -> str:
     return \
-        f"/{prefix.strip('/')}/" if prefix != "" else "" \
+        f"gs://{bucket_with_prefix.strip('/')}/" \
         f"/format=json" \
         f"/type={type}" \
         f"/source={source}" \
