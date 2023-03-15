@@ -3,6 +3,7 @@ import json
 import sys
 import re
 import uuid
+from typing import Tuple
 
 
 def get_parameters(arg_num: int = 1) -> dict:
@@ -41,16 +42,13 @@ def param_from_prefix(
 
 
 # TODO replace with a cleaner solution such as https://pypi.org/project/cron-converter/
-def interval_to_timestamp_range(interval: str) -> list:
+def interval_to_timestamp_range(interval: str) -> Tuple[datetime.datetime, datetime.datetime]:
     now = datetime.datetime.today()
     if interval == "every hour":
         previous_hour = now - datetime.timedelta(hours=1)
         current_hour = now
 
-        return [
-            previous_hour.replace(minute=0, second=0, microsecond=0),
-            current_hour.replace(minute=0, second=0, microsecond=0)
-        ]
+        return previous_hour.replace(minute=0, second=0, microsecond=0), current_hour.replace(minute=0, second=0, microsecond=0)
 
     raise Exception(f"Unknown interval: {interval}")
 
