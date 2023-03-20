@@ -1,3 +1,4 @@
+import datetime
 from typing import Callable
 from concurrent import futures
 from google.cloud import pubsub_v1
@@ -89,18 +90,16 @@ def report_load_finished(
     loaded_path: str,
     data_type: str,
     data_source: str,
-    data_extraction_ts: str
+    ingestion_ts: datetime.datetime,
 ):
-    data_str = loaded_path
-    # Data must be a bytestring
-    data = data_str.encode("utf-8")
+    data = loaded_path.encode("utf-8")
     # Add two attributes, origin and username, to the message
     future = publisher.publish(
         topic_path,
         data,
         source=data_source,
         type=data_type,
-        extraction_ts=data_extraction_ts,
+        ingestion_date=ingestion_ts.strftime('%Y-%m-%d'),
     )
 
     future.result()  # force wait for result
