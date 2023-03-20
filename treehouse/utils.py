@@ -57,15 +57,16 @@ def create_extracted_object_id(
     prefix: str,
     data_type: str,
     data_source: str,
-    ingestion_timestamp: datetime.datetime
+    ingestion_date: str,
+    ingestion_hour: int
 ) -> str:
     return \
         f"{prefix.strip('/')}/" if prefix != "" else "" \
         f"/format=json" \
         f"/type={data_type}" \
         f"/source={data_source}" \
-        f"/ingestion_date={ingestion_timestamp.strftime('%Y-%m-%d')}" \
-        f"/ingestion_hour={ingestion_timestamp.strftime('%H')}" \
+        f"/ingestion_date={ingestion_date}" \
+        f"/ingestion_hour={ingestion_hour}" \
         f"/{uuid.uuid4()}.json"
 
 
