@@ -84,22 +84,16 @@ def publish_messages_from_iterator(
     return True
 
 
-def report_load_finished(
+def report_step_finished(
     publisher: pubsub_v1.PublisherClient,
     topic_path: str,
     loaded_path: str,
-    data_type: str,
-    data_source: str,
-    ingestion_ts: datetime.datetime,
 ):
     data = loaded_path.encode("utf-8")
     # Add two attributes, origin and username, to the message
     future = publisher.publish(
         topic_path,
         data,
-        source=data_source,
-        type=data_type,
-        ingestion_date=ingestion_ts.strftime('%Y-%m-%d'),
     )
 
     future.result()  # force wait for result
