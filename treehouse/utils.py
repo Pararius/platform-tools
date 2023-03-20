@@ -53,31 +53,33 @@ def interval_to_timestamp_range(interval: str) -> Tuple[datetime.datetime, datet
     raise Exception(f"Unknown interval: {interval}")
 
 
-def create_extracted_object_prefix(prefix: str, type: str, source: str, extraction_ts: str) -> str:
+def create_extracted_object_id(
+    prefix: str,
+    data_type: str,
+    data_source: str,
+    ingestion_timestamp: datetime.datetime
+) -> str:
     return \
         f"{prefix.strip('/')}/" if prefix != "" else "" \
         f"/format=json" \
-        f"/type={type}" \
-        f"/source={source}" \
-        f"/extraction_ts={extraction_ts}" \
+        f"/type={data_type}" \
+        f"/source={data_source}" \
+        f"/ingestion_date={ingestion_timestamp.strftime('%Y-%m-%d')}" \
+        f"/ingestion_hour={ingestion_timestamp.strftime('%H')}" \
         f"/{uuid.uuid4()}.json"
 
 
-def create_extracted_objects_path(bucket_with_prefix: str, type: str, source: str, extraction_ts: str) -> str:
-    return \
-        f"gs://{bucket_with_prefix.strip('/')}/" \
-        f"/format=json" \
-        f"/type={type}" \
-        f"/source={source}" \
-        f"/extraction_ts={extraction_ts}" \
-        f"/*.json"
-
-
-def create_loaded_path(bucket_with_prefix: str, type: str, source: str, extraction_ts: str) -> str:
+def create_loaded_path(
+    bucket_with_prefix: str,
+    data_type: str,
+    data_source: str,
+    ingestion_timestamp: datetime.datetime
+) -> str:
     return \
         f"gs://{bucket_with_prefix.strip('/')}" \
         f"/format=parquet" \
-        f"/type={type}" \
-        f"/source={source}" \
-        f"/extraction_ts={extraction_ts}" \
+        f"/type={data_type}" \
+        f"/source={data_source}" \
+        f"/ingestion_date={ingestion_timestamp.strftime('%Y-%m-%d')}" \
+        f"/ingestion_hour={ingestion_timestamp.strftime('%H')}" \
         f"/{uuid.uuid4()}.parquet"
