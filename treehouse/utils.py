@@ -1,6 +1,8 @@
+import datetime
 import json
 import sys
 import re
+from typing import Tuple
 
 
 def get_parameters(arg_num: int = 1) -> dict:
@@ -17,7 +19,7 @@ def params_from_prefix(
     pat = re.compile(reg_pattern)
     params = {}
 
-    for m in pat.finditer(prefix):
+    for m in pat.finditer(prefix + "/"):
         params[m["name"]] = m["value"]
 
     return params
@@ -26,7 +28,7 @@ def params_from_prefix(
 def param_from_prefix(
     prefix: str, param: str, reg_pattern: str = "([a-zA-Z0-9\.\-\_]+)\/"
 ) -> str:
-    match = re.search(r"\/" + f"{param}={reg_pattern}", prefix)
+    match = re.search(r"\/" + f"{param}={reg_pattern}", prefix + "/")
 
     if not match or not match.group(1):
         raise Exception(
@@ -36,3 +38,19 @@ def param_from_prefix(
     param_value = match.group(1)
 
     return param_value
+
+
+# TODO replace with a cleaner solution such as https://pypi.org/project/cron-converter/
+def interval_to_timestamp_range(
+    interval: str,
+) -> Tuple[datetime.datetime, datetime.datetime]:
+    now = datetime.datetime.today()
+    if interval == "every hour" or interval == "hourly":
+        previous_hour = now - datetime.timedelta(hours=1)
+        current_hour = now
+
+        return previous_hour.replace(
+            minute=0, second=0, microsecond=0
+        ), current_hour.replace(minute=0, second=0, microsecond=0)
+
+    raise Exception(f"Unknown interval: {interval}")
