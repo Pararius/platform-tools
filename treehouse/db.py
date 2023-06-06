@@ -59,12 +59,18 @@ def create_cloudsql_mysql_connection(
 
 def query_to_df(
     query: str,
-    db_connection: sqlalchemy.engine.Engine,
+    engine: sqlalchemy.engine.Engine,
 ) -> pd.DataFrame:
-    return pd.read_sql_query(
+    conn = engine.connect()
+    df = pd.read_sql_query(
         sql=sqlalchemy.text(query),
-        con=db_connection.connect(),
+        con=conn,
     )
+
+    print("closing")
+    conn.close()
+
+    return df
 
 
 def query_to_csv(
