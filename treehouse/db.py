@@ -67,7 +67,6 @@ def query_to_df(
         con=conn,
     )
 
-    print("closing")
     conn.close()
 
     return df

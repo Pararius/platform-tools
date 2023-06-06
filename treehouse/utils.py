@@ -20,7 +20,7 @@ def params_from_prefix(
     pat = re.compile(reg_pattern)
     params = {}
 
-    for m in pat.finditer(prefix+"/"):
+    for m in pat.finditer(prefix + "/"):
         params[m["name"]] = m["value"]
 
     return params
@@ -29,7 +29,7 @@ def params_from_prefix(
 def param_from_prefix(
     prefix: str, param: str, reg_pattern: str = "([a-zA-Z0-9\.\-\_]+)\/"
 ) -> str:
-    match = re.search(r"\/" + f"{param}={reg_pattern}", prefix+"/")
+    match = re.search(r"\/" + f"{param}={reg_pattern}", prefix + "/")
 
     if not match or not match.group(1):
         raise Exception(
