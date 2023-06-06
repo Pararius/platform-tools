@@ -2,7 +2,6 @@ import datetime
 import json
 import sys
 import re
-import uuid
 from typing import Tuple
 
 
@@ -46,7 +45,7 @@ def interval_to_timestamp_range(
     interval: str,
 ) -> Tuple[datetime.datetime, datetime.datetime]:
     now = datetime.datetime.today()
-    if interval == "every hour":
+    if interval == "every hour" or interval == "hourly":
         previous_hour = now - datetime.timedelta(hours=1)
         current_hour = now
 
@@ -55,41 +54,3 @@ def interval_to_timestamp_range(
         ), current_hour.replace(minute=0, second=0, microsecond=0)
 
     raise Exception(f"Unknown interval: {interval}")
-
-
-def create_extracted_object_id(
-    prefix: str,
-    data_type: str,
-    data_source: str,
-    ingestion_date: str,
-    ingestion_hour: int,
-) -> str:
-    return (
-        f"{prefix.strip('/')}/"
-        if prefix.strip("/") != ""
-        else ""
-        f"format=json/"
-        f"type={data_type}/"
-        f"source={data_source}/"
-        f"ingestion_date={ingestion_date}/"
-        f"ingestion_hour={ingestion_hour}/"
-        f"{uuid.uuid4()}.json"
-    )
-
-
-def create_loaded_path(
-    bucket_with_prefix: str,
-    data_type: str,
-    data_source: str,
-    ingestion_date: str,
-    ingestion_hour: int,
-) -> str:
-    return (
-        f"gs://{bucket_with_prefix.strip('/')}"
-        f"/format=parquet"
-        f"/type={data_type}"
-        f"/source={data_source}"
-        f"/ingestion_date={ingestion_date}"
-        f"/ingestion_hour={ingestion_hour}"
-        f"/{uuid.uuid4()}.parquet"
-    )
