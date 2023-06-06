@@ -1,4 +1,3 @@
-import datetime
 from typing import Callable
 from concurrent import futures
 from google.cloud import pubsub_v1
@@ -82,18 +81,3 @@ def publish_messages_from_iterator(
         print(f"Published {lines_done} records so far")
 
     return True
-
-
-def report_step_finished(
-    publisher: pubsub_v1.PublisherClient,
-    topic_path: str,
-    loaded_path: str,
-):
-    data = loaded_path.encode("utf-8")
-    # Add two attributes, origin and username, to the message
-    future = publisher.publish(
-        topic_path,
-        data,
-    )
-
-    future.result()  # force wait for result
