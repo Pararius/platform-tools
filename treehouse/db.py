@@ -10,7 +10,8 @@ def create_mysql_connection(
     host: str, port: int, username: str, password: str, database: str
 ) -> sqlalchemy.engine.Engine:
     return sqlalchemy.create_engine(
-        f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
+        f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}",
+        pool_recycle=600, pool_pre_ping=True
     )
 
 
