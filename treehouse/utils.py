@@ -46,11 +46,19 @@ def interval_to_timestamp_range(
 ) -> Tuple[datetime.datetime, datetime.datetime]:
     now = datetime.datetime.today()
     if interval == "every hour" or interval == "hourly":
-        previous_hour = now - datetime.timedelta(hours=1)
-        current_hour = now
+        previous_ts = now - datetime.timedelta(hours=1)
+        current_ts = now
 
-        return previous_hour.replace(
+        return previous_ts.replace(
             minute=0, second=0, microsecond=0
-        ), current_hour.replace(minute=0, second=0, microsecond=0)
+        ), current_ts.replace(minute=0, second=0, microsecond=0)
+
+    if interval == "every day" or interval == "daily":
+        previous_ts = now - datetime.timedelta(days=1)
+        current_ts = now
+
+        return previous_ts.replace(
+            minute=0, second=0, microsecond=0
+        ), current_ts.replace(minute=0, second=0, microsecond=0)
 
     raise Exception(f"Unknown interval: {interval}")
