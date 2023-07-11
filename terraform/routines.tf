@@ -1,6 +1,6 @@
 resource "google_bigquery_routine" "empty_to_null" {
   dataset_id      = local.routines_dataset
-  definition_body = "CASE WHEN LOWER(TRIM(x)) IN ('none', 'null', '') THEN NULL ELSE x"
+  definition_body = "CASE WHEN LOWER(TRIM(x)) IN ('none', 'null', '') THEN NULL ELSE x END AS y"
   language        = "SQL"
   project         = local.google_project_id
   routine_id      = "empty_to_null${local.branch_suffix_underscore_edition}"
