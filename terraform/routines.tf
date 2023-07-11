@@ -27,7 +27,7 @@ resource "google_bigquery_routine" "json_get_string" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type = "STRING"
+  return_type =  "{\"typeKind\" :  \"STRING\"}"
 }
 
 resource "google_bigquery_routine" "json_get_timestamp" {
@@ -43,7 +43,7 @@ resource "google_bigquery_routine" "json_get_timestamp" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type = "TIMESTAMP"
+  return_type =  "{\"typeKind\" :  \"TIMESTAMP\"}"
 }
 
 resource "google_bigquery_routine" "json_get_bool" {
@@ -59,7 +59,7 @@ resource "google_bigquery_routine" "json_get_bool" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type = "BOOL"
+  return_type =  "{\"typeKind\" :  \"BOOL\"}"
 }
 
 resource "google_bigquery_routine" "json_get_int" {
@@ -75,7 +75,7 @@ resource "google_bigquery_routine" "json_get_int" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type = "INT64"
+  return_type =  "{\"typeKind\" :  \"INT64\"}"
 }
 
 resource "google_bigquery_routine" "json_get_float" {
@@ -91,7 +91,7 @@ resource "google_bigquery_routine" "json_get_float" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type = "FLOAT64"
+  return_type =  "{\"typeKind\" :  \"FLOAT64\"}"
 }
 
 
