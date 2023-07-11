@@ -19,7 +19,7 @@ resource "google_bigquery_routine" "json_get_string" {
   definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS STRING)"
   language        = "SQL"
   project         = local.google_project_id
-  routine_id      = "get_string${local.branch_suffix_underscore_edition}"
+  routine_id      = "json_string${local.branch_suffix_underscore_edition}"
   routine_type    = "SCALAR_FUNCTION"
 
   arguments {
@@ -27,7 +27,7 @@ resource "google_bigquery_routine" "json_get_string" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type =  "{\"typeKind\" :  \"STRING\"}"
+  return_type = "{\"typeKind\" :  \"STRING\"}"
 }
 
 resource "google_bigquery_routine" "json_get_timestamp" {
@@ -35,7 +35,7 @@ resource "google_bigquery_routine" "json_get_timestamp" {
   definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS TIMESTAMP)"
   language        = "SQL"
   project         = local.google_project_id
-  routine_id      = "get_timestamp${local.branch_suffix_underscore_edition}"
+  routine_id      = "json_timestamp${local.branch_suffix_underscore_edition}"
   routine_type    = "SCALAR_FUNCTION"
 
   arguments {
@@ -43,7 +43,7 @@ resource "google_bigquery_routine" "json_get_timestamp" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type =  "{\"typeKind\" :  \"TIMESTAMP\"}"
+  return_type = "{\"typeKind\" :  \"TIMESTAMP\"}"
 }
 
 resource "google_bigquery_routine" "json_get_bool" {
@@ -51,7 +51,7 @@ resource "google_bigquery_routine" "json_get_bool" {
   definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS BOOL)"
   language        = "SQL"
   project         = local.google_project_id
-  routine_id      = "get_bool${local.branch_suffix_underscore_edition}"
+  routine_id      = "json_bool${local.branch_suffix_underscore_edition}"
   routine_type    = "SCALAR_FUNCTION"
 
   arguments {
@@ -59,7 +59,7 @@ resource "google_bigquery_routine" "json_get_bool" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type =  "{\"typeKind\" :  \"BOOL\"}"
+  return_type = "{\"typeKind\" :  \"BOOL\"}"
 }
 
 resource "google_bigquery_routine" "json_get_int" {
@@ -67,7 +67,7 @@ resource "google_bigquery_routine" "json_get_int" {
   definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS INT64)"
   language        = "SQL"
   project         = local.google_project_id
-  routine_id      = "get_int${local.branch_suffix_underscore_edition}"
+  routine_id      = "json_int${local.branch_suffix_underscore_edition}"
   routine_type    = "SCALAR_FUNCTION"
 
   arguments {
@@ -75,7 +75,7 @@ resource "google_bigquery_routine" "json_get_int" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type =  "{\"typeKind\" :  \"INT64\"}"
+  return_type = "{\"typeKind\" :  \"INT64\"}"
 }
 
 resource "google_bigquery_routine" "json_get_float" {
@@ -83,7 +83,7 @@ resource "google_bigquery_routine" "json_get_float" {
   definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS FLOAT64)"
   language        = "SQL"
   project         = local.google_project_id
-  routine_id      = "get_float${local.branch_suffix_underscore_edition}"
+  routine_id      = "json_float${local.branch_suffix_underscore_edition}"
   routine_type    = "SCALAR_FUNCTION"
 
   arguments {
@@ -91,7 +91,7 @@ resource "google_bigquery_routine" "json_get_float" {
     argument_kind = "ANY_TYPE"
   }
 
-  return_type =  "{\"typeKind\" :  \"FLOAT64\"}"
+  return_type = "{\"typeKind\" :  \"FLOAT64\"}"
 }
 
 
