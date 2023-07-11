@@ -14,6 +14,87 @@ resource "google_bigquery_routine" "greatest_non_null" {
   }
 }
 
+resource "google_bigquery_routine" "json_get_string" {
+  dataset_id      = local.routines_dataset
+  definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS STRING)"
+  language        = "SQL"
+  project         = local.google_project_id
+  routine_id      = "json_string${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
+
+  arguments {
+    name          = "json_path"
+    argument_kind = "ANY_TYPE"
+  }
+
+  return_type = "{\"typeKind\" :  \"STRING\"}"
+}
+
+resource "google_bigquery_routine" "json_get_timestamp" {
+  dataset_id      = local.routines_dataset
+  definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS TIMESTAMP)"
+  language        = "SQL"
+  project         = local.google_project_id
+  routine_id      = "json_timestamp${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
+
+  arguments {
+    name          = "json_path"
+    argument_kind = "ANY_TYPE"
+  }
+
+  return_type = "{\"typeKind\" :  \"TIMESTAMP\"}"
+}
+
+resource "google_bigquery_routine" "json_get_bool" {
+  dataset_id      = local.routines_dataset
+  definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS BOOL)"
+  language        = "SQL"
+  project         = local.google_project_id
+  routine_id      = "json_bool${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
+
+  arguments {
+    name          = "json_path"
+    argument_kind = "ANY_TYPE"
+  }
+
+  return_type = "{\"typeKind\" :  \"BOOL\"}"
+}
+
+resource "google_bigquery_routine" "json_get_int" {
+  dataset_id      = local.routines_dataset
+  definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS INT64)"
+  language        = "SQL"
+  project         = local.google_project_id
+  routine_id      = "json_int${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
+
+  arguments {
+    name          = "json_path"
+    argument_kind = "ANY_TYPE"
+  }
+
+  return_type = "{\"typeKind\" :  \"INT64\"}"
+}
+
+resource "google_bigquery_routine" "json_get_float" {
+  dataset_id      = local.routines_dataset
+  definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS FLOAT64)"
+  language        = "SQL"
+  project         = local.google_project_id
+  routine_id      = "json_float${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
+
+  arguments {
+    name          = "json_path"
+    argument_kind = "ANY_TYPE"
+  }
+
+  return_type = "{\"typeKind\" :  \"FLOAT64\"}"
+}
+
+
 resource "google_storage_bucket_object" "user_agent_parser_lib" {
   name = "bigquery_functions/user_agent_parser/woothee.js"
 
