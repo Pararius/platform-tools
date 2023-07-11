@@ -1,5 +1,7 @@
+
+
 resource "google_bigquery_routine" "greatest_non_null" {
-  dataset_id      = "fn" # manually created dataset so have to hardcode (there is no data block for datasets yet, see: https://github.com/hashicorp/terraform-provider-google/issues/5693)
+  dataset_id      = local.routines_dataset
   definition_body = "(SELECT MAX(y) FROM UNNEST(x) AS y)"
   language        = "SQL"
   project         = local.google_project_id
@@ -10,4 +12,69 @@ resource "google_bigquery_routine" "greatest_non_null" {
     name          = "x"
     argument_kind = "ANY_TYPE"
   }
+}
+
+resource "google_storage_bucket_object" "user_agent_parser_lib" {
+  name = "bigquery_functions/user_agent_parser/woothee.js"
+
+  bucket = module.platform-artifacts-bucket.bucket_name
+  source = "./woothee.js"
+}
+
+resource "google_bigquery_routine" "user_agent_parser" {
+  dataset_id         = local.routines_dataset
+  routine_id         = "user_agent_parser"
+  routine_type       = "SCALAR_FUNCTION"
+  language           = "JAVASCRIPT"
+  imported_libraries = [format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)]
+  arguments {
+    name      = "ua"
+    data_type = "{\"typeKind\" :  \"STRING\"}"
+  }
+  definition_body = "return {category: woothee.parse(ua).category, name: woothee.parse(ua).name, version: woothee.parse(ua).version, os: woothee.parse(ua).os, vendor: woothee.parse(ua).vendor, os_version: woothee.parse(ua).os_version};"
+
+  return_type = <<EOF
+  {
+  	"typeKind": "STRUCT",
+  	"structType": {
+  		"fields": [{
+  				"name": "category",
+  				"type": {
+  					"typeKind": "STRING"
+  				}
+  			},
+  			{
+  				"name": "name",
+  				"type": {
+  					"typeKind": "STRING"
+  				}
+  			},
+  			{
+  				"name": "version",
+  				"type": {
+  					"typeKind": "STRING"
+  				}
+  			},
+  			{
+  				"name": "os",
+  				"type": {
+  					"typeKind": "STRING"
+  				}
+  			},
+  			{
+  				"name": "vendor",
+  				"type": {
+  					"typeKind": "STRING"
+  				}
+  			},
+  			{
+  				"name": "os_version",
+  				"type": {
+  					"typeKind": "STRING"
+  				}
+  			}
+  		]
+  	}
+  }
+EOF
 }
