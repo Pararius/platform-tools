@@ -8,7 +8,7 @@ resource "google_bigquery_routine" "empty_to_null" {
 
   arguments {
     name          = "x"
-    data_type     = "STRING"
+    data_type     = jsonencode({"typeKind" = "STRING"})
     argument_kind = "FIXED_TYPE"
   }
 }
