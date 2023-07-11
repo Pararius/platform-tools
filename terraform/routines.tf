@@ -1,4 +1,16 @@
+resource "google_bigquery_routine" "empty_to_null" {
+  dataset_id      = local.routines_dataset
+  definition_body = "NULLIF(NULLIF(x, 'None'), '')"
+  language        = "SQL"
+  project         = local.google_project_id
+  routine_id      = "empty_to_null${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
 
+  arguments {
+    name          = "x"
+    argument_kind = "STRING"
+  }
+}
 
 resource "google_bigquery_routine" "greatest_non_null" {
   dataset_id      = local.routines_dataset
