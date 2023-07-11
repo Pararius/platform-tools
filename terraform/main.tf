@@ -21,6 +21,8 @@ locals {
   google_project_id                = "data-prod-123456"
   region                           = "europe-west1"
   zone                             = "europe-west1-b"
+
+  routines_dataset = "fn" # manually created dataset so have to hardcode (there is no data block for datasets yet, see: https://github.com/hashicorp/terraform-provider-google/issues/5693)
 }
 
 module "platform-artifacts-bucket" {
