@@ -5,7 +5,7 @@ resource "google_bigquery_routine" "greatest_non_null" {
   definition_body = "(SELECT MAX(y) FROM UNNEST(x) AS y)"
   language        = "SQL"
   project         = local.google_project_id
-  routine_id      = "greatest_non_null"
+  routine_id      = "greatest_non_null${local.branch_suffix_underscore_edition}"
   routine_type    = "SCALAR_FUNCTION"
 
   arguments {
@@ -23,7 +23,7 @@ resource "google_storage_bucket_object" "user_agent_parser_lib" {
 
 resource "google_bigquery_routine" "user_agent_parser" {
   dataset_id         = local.routines_dataset
-  routine_id         = "user_agent_parser"
+  routine_id         = "user_agent_parser${local.branch_suffix_underscore_edition}"
   routine_type       = "SCALAR_FUNCTION"
   language           = "JAVASCRIPT"
   imported_libraries = [format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)]
