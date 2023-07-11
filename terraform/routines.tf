@@ -1,6 +1,6 @@
 resource "google_bigquery_routine" "empty_to_null" {
   dataset_id      = local.routines_dataset
-  definition_body = "NULLIF(NULLIF(x, 'None'), '')"
+  definition_body = "NULLIF(NULLIF(NULLIF(TRIM(x), 'null'), 'None'), '')"
   language        = "SQL"
   project         = local.google_project_id
   routine_id      = "empty_to_null${local.branch_suffix_underscore_edition}"
@@ -8,7 +8,8 @@ resource "google_bigquery_routine" "empty_to_null" {
 
   arguments {
     name          = "x"
-    argument_kind = "STRING"
+    data_type     = "STRING"
+    argument_kind = "FIXED_TYPE"
   }
 }
 
@@ -119,7 +120,9 @@ resource "google_bigquery_routine" "user_agent_parser" {
   routine_id         = "user_agent_parser${local.branch_suffix_underscore_edition}"
   routine_type       = "SCALAR_FUNCTION"
   language           = "JAVASCRIPT"
-  imported_libraries = [format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)]
+  imported_libraries = [
+    format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)
+  ]
   arguments {
     name      = "ua"
     data_type = "{\"typeKind\" :  \"STRING\"}"
