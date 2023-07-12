@@ -1,4 +1,17 @@
+resource "google_bigquery_routine" "empty_to_null" {
+  dataset_id      = local.routines_dataset
+  definition_body = "IF(LOWER(TRIM(x)) IN ('none', 'null', ''), NULL, x)"
+  language        = "SQL"
+  project         = local.google_project_id
+  routine_id      = "empty_to_null${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
 
+  arguments {
+    name          = "x"
+    data_type     = jsonencode({ typeKind = "STRING" })
+    argument_kind = "FIXED_TYPE"
+  }
+}
 
 resource "google_bigquery_routine" "greatest_non_null" {
   dataset_id      = local.routines_dataset
@@ -103,11 +116,13 @@ resource "google_storage_bucket_object" "user_agent_parser_lib" {
 }
 
 resource "google_bigquery_routine" "user_agent_parser" {
-  dataset_id         = local.routines_dataset
-  routine_id         = "user_agent_parser${local.branch_suffix_underscore_edition}"
-  routine_type       = "SCALAR_FUNCTION"
-  language           = "JAVASCRIPT"
-  imported_libraries = [format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)]
+  dataset_id   = local.routines_dataset
+  routine_id   = "user_agent_parser${local.branch_suffix_underscore_edition}"
+  routine_type = "SCALAR_FUNCTION"
+  language     = "JAVASCRIPT"
+  imported_libraries = [
+    format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)
+  ]
   arguments {
     name      = "ua"
     data_type = "{\"typeKind\" :  \"STRING\"}"
