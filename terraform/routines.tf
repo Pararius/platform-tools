@@ -1,6 +1,6 @@
 resource "google_bigquery_routine" "empty_to_null" {
   dataset_id      = local.routines_dataset
-  definition_body = "IF(LOWER(TRIM(x)) IN ('none', 'null', ''), NULL, x)"
+  definition_body = "IF(LOWER(TRIM(x)) IN ('none', 'null', 'nan', 'nat', ''), NULL, x)"
   language        = "SQL"
   project         = local.google_project_id
   routine_id      = "empty_to_null${local.branch_suffix_underscore_edition}"
