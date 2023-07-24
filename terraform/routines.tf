@@ -1,6 +1,6 @@
 resource "google_bigquery_routine" "empty_to_null" {
   dataset_id      = local.routines_dataset
-  definition_body = "IF(LOWER(TRIM(x)) IN ('none', 'null', ''), NULL, x)"
+  definition_body = "IF(LOWER(TRIM(SAFE_CAST(x AS STRING))) IN ('none', 'null', 'nan', 'nat', ''), NULL, x)"
   language        = "SQL"
   project         = local.google_project_id
   routine_id      = "empty_to_null${local.branch_suffix_underscore_edition}"
@@ -8,8 +8,7 @@ resource "google_bigquery_routine" "empty_to_null" {
 
   arguments {
     name          = "x"
-    data_type     = jsonencode({ typeKind = "STRING" })
-    argument_kind = "FIXED_TYPE"
+    argument_kind = "ANY_TYPE"
   }
 }
 
