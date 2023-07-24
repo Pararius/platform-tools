@@ -111,7 +111,8 @@ def test_process_csv_in_blocks(mock_storage):
             data=[
                 {"col1": "value1", "col2": "value2"},
                 {"col1": "value3", "col2": "value4"},
-            ]
+            ],
+            dtype = "string[pyarrow]"
         ),
     )
 
