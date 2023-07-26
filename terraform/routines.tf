@@ -185,7 +185,7 @@ resource "google_bigquery_routine" "parse_furnished_types" {
     data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
   }
   definition_body = <<EOF
-if (raw_types == null) {
+if (raw_types == null || raw_types.length == 0) {
   return null;
 }
 
