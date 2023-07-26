@@ -205,10 +205,4 @@ if (final_types.length == 0) {
 
 return final_types;
 EOF
-
-  return_type = <<EOF
-  {
-  	"typeKind": "ARRAY"
-  }
-EOF
 }
