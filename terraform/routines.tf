@@ -192,15 +192,15 @@ if (raw_types == null || raw_types.length == 0) {
 final_types = [];
 raw_types = raw_types.map(raw_type => raw_type.toLowerCase());
 
-if (raw_types.filter(t => t.includes("shell")) || raw_types.filter(t => t.includes("kaal"))) {
+if (raw_types.filter(t => t.includes("shell") || t.includes("kaal"))) {
   final_types.push("shell");
 }
 
-if (raw_types.filter(t => t.includes("upholstered")) || raw_types.filter(t => t.includes("gestoffeerd"))) {
+if (raw_types.filter(t => t.includes("upholstered") || t.includes("gestoffeerd"))) {
   final_types.push("upholstered");
 }
 
-if (raw_types.filter(t => t.includes("furnished")) || raw_types.filter(t => t.includes("gemeubileerd"))) {
+if (raw_types.filter(t => t.includes("furnished") || t.includes("gemeubileerd"))) {
   final_types.push("furnished");
 }
 
