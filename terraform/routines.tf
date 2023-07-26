@@ -174,15 +174,14 @@ resource "google_bigquery_routine" "user_agent_parser" {
 EOF
 }
 
-resource "google_bigquery_routine" "furnished_type_parser" {
+resource "google_bigquery_routine" "parse_furnished_types" {
   dataset_id   = local.routines_dataset
-  routine_id   = "parse_furnished_type${local.branch_suffix_underscore_edition}"
+  routine_id   = "parse_furnished_types${local.branch_suffix_underscore_edition}"
   routine_type = "SCALAR_FUNCTION"
   language     = "JAVASCRIPT"
   arguments {
     name          = "raw_types"
-    argument_kind = "FIXED_TYPE"
-    data_type     = "{\"typeKind\": \"ARRAY<STRING>\"}"
+    argument_kind = "ANY_TYPE"
   }
   definition_body = <<EOF
 final_types = [];
