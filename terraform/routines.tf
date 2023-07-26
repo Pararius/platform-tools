@@ -115,10 +115,10 @@ resource "google_storage_bucket_object" "user_agent_parser_lib" {
 }
 
 resource "google_bigquery_routine" "user_agent_parser" {
-  dataset_id   = local.routines_dataset
-  routine_id   = "user_agent_parser${local.branch_suffix_underscore_edition}"
-  routine_type = "SCALAR_FUNCTION"
-  language     = "JAVASCRIPT"
+  dataset_id         = local.routines_dataset
+  routine_id         = "user_agent_parser${local.branch_suffix_underscore_edition}"
+  routine_type       = "SCALAR_FUNCTION"
+  language           = "JAVASCRIPT"
   imported_libraries = [
     format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)
   ]
@@ -170,6 +170,41 @@ resource "google_bigquery_routine" "user_agent_parser" {
   			}
   		]
   	}
+  }
+EOF
+}
+
+resource "google_bigquery_routine" "furnished_type_parser" {
+  dataset_id   = local.routines_dataset
+  routine_id   = "furnished_type_parser${local.branch_suffix_underscore_edition}"
+  routine_type = "SCALAR_FUNCTION"
+  language     = "JAVASCRIPT"
+  arguments {
+    name          = "raw_types"
+    argument_kind = "ARRAY<STRING>"
+  }
+  definition_body = <<EOF
+final_types = [];
+raw_types = raw_types.map(raw_type => raw_type.toLowerCase());
+
+if (raw_types.filter(t => t.includes("shell")) || raw_types.filter(t => t.includes("kaal"))) {
+  final_types.push("shell");
+}
+
+if (raw_types.filter(t => t.includes("upholstered")) || raw_types.filter(t => t.includes("gestoffeerd"))) {
+  final_types.push("upholstered");
+}
+
+if (raw_types.filter(t => t.includes("furnished")) || raw_types.filter(t => t.includes("gemeubileerd"))) {
+  final_types.push("furnished");
+}
+
+return final_types;
+EOF
+
+  return_type = <<EOF
+  {
+  	"typeKind": "ARRAY<STRING>"
   }
 EOF
 }
