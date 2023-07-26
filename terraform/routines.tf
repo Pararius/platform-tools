@@ -182,7 +182,7 @@ resource "google_bigquery_routine" "furnished_type_parser" {
   arguments {
     name          = "raw_types"
     argument_kind = "FIXED_TYPE"
-    data_type     = "ARRAY<STRING>"
+    data_type     = "{\"typeKind\": \"ARRAY<STRING>\"}"
   }
   definition_body = <<EOF
 final_types = [];
