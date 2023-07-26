@@ -181,7 +181,8 @@ resource "google_bigquery_routine" "parse_furnished_types" {
   language     = "JAVASCRIPT"
   arguments {
     name          = "raw_types"
-    argument_kind = "ANY_TYPE"
+    argument_kind = "FIXED_TYPE"
+    data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
   }
   definition_body = <<EOF
 final_types = [];
@@ -206,5 +207,5 @@ if (final_types.length == 0) {
 return final_types;
 EOF
 
-  return_type = "{\"typeKind\" :  \"ARRAY<STRING>\"}"
+  return_type = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
 }
