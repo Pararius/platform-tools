@@ -199,12 +199,16 @@ if (raw_types.filter(t => t.includes("furnished")) || raw_types.filter(t => t.in
   final_types.push("furnished");
 }
 
+if (final_types.length == 0) {
+  return null;
+}
+
 return final_types;
 EOF
 
   return_type = <<EOF
   {
-  	"typeKind": "ARRAY<STRING>"
+  	"typeKind": "ARRAY"
   }
 EOF
 }
