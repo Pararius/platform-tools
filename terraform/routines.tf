@@ -205,4 +205,6 @@ if (final_types.length == 0) {
 
 return final_types;
 EOF
+
+  return_type = "{\"typeKind\" :  \"ARRAY<STRING>\"}"
 }
