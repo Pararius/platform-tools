@@ -185,6 +185,10 @@ resource "google_bigquery_routine" "parse_furnished_types" {
     data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
   }
   definition_body = <<EOF
+if (raw_types == null) {
+  return null;
+}
+
 final_types = [];
 raw_types = raw_types.map(raw_type => raw_type.toLowerCase());
 
