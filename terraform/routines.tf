@@ -115,10 +115,10 @@ resource "google_storage_bucket_object" "user_agent_parser_lib" {
 }
 
 resource "google_bigquery_routine" "user_agent_parser" {
-  dataset_id   = local.routines_dataset
-  routine_id   = "user_agent_parser${local.branch_suffix_underscore_edition}"
-  routine_type = "SCALAR_FUNCTION"
-  language     = "JAVASCRIPT"
+  dataset_id         = local.routines_dataset
+  routine_id         = "user_agent_parser${local.branch_suffix_underscore_edition}"
+  routine_type       = "SCALAR_FUNCTION"
+  language           = "JAVASCRIPT"
   imported_libraries = [
     format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)
   ]
@@ -176,12 +176,13 @@ EOF
 
 resource "google_bigquery_routine" "furnished_type_parser" {
   dataset_id   = local.routines_dataset
-  routine_id   = "furnished_type_parser${local.branch_suffix_underscore_edition}"
+  routine_id   = "parse_furnished_type${local.branch_suffix_underscore_edition}"
   routine_type = "SCALAR_FUNCTION"
   language     = "JAVASCRIPT"
   arguments {
     name          = "raw_types"
-    argument_kind = "ARRAY<STRING>"
+    argument_kind = "FIXED_TYPE"
+    data_type     = "ARRAY<STRING>"
   }
   definition_body = <<EOF
 final_types = [];
