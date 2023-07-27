@@ -115,10 +115,10 @@ resource "google_storage_bucket_object" "user_agent_parser_lib" {
 }
 
 resource "google_bigquery_routine" "user_agent_parser" {
-  dataset_id   = local.routines_dataset
-  routine_id   = "user_agent_parser${local.branch_suffix_underscore_edition}"
-  routine_type = "SCALAR_FUNCTION"
-  language     = "JAVASCRIPT"
+  dataset_id         = local.routines_dataset
+  routine_id         = "user_agent_parser${local.branch_suffix_underscore_edition}"
+  routine_type       = "SCALAR_FUNCTION"
+  language           = "JAVASCRIPT"
   imported_libraries = [
     format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)
   ]
@@ -174,42 +174,35 @@ resource "google_bigquery_routine" "user_agent_parser" {
 EOF
 }
 
-resource "google_bigquery_routine" "parse_furnished_types" {
+resource "google_bigquery_routine" "greatest_furnished_type" {
   dataset_id   = local.routines_dataset
-  routine_id   = "parse_furnished_types${local.branch_suffix_underscore_edition}"
+  routine_id   = "greatest_furnished_type${local.branch_suffix_underscore_edition}"
   routine_type = "SCALAR_FUNCTION"
-  language     = "JAVASCRIPT"
   arguments {
     name          = "raw_types"
     argument_kind = "FIXED_TYPE"
     data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
   }
   definition_body = <<EOF
-if (raw_types == null || raw_types.length == 0) {
-  return null;
-}
-
-final_types = [];
-raw_types = raw_types.map(raw_type => raw_type.toLowerCase());
-
-if (raw_types.filter(t => t.includes("shell") || t.includes("kaal"))) {
-  final_types.push("shell");
-}
-
-if (raw_types.filter(t => t.includes("upholstered") || t.includes("gestoffeerd"))) {
-  final_types.push("upholstered");
-}
-
-if (raw_types.filter(t => t.includes("furnished") || t.includes("gemeubileerd"))) {
-  final_types.push("furnished");
-}
-
-if (final_types.length == 0) {
-  return null;
-}
-
-return final_types;
+(
+  SELECT
+    IF(
+      REGEXP_CONTAINS(x, 'furnished|gemeubileerd'),
+      'furnished',
+      IF(
+        REGEXP_CONTAINS(x, 'upholstered|gestoffeerd'),
+        'upholstered',
+        IF(
+          REGEXP_CONTAINS(x, 'shell|kaal'),
+          'shell',
+          NULL
+        )
+      )
+    )
+  FROM UNNEST(raw_types) AS y
+  LIMIT 1
+)
 EOF
-
-  return_type = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
+  language        = "SQL"
+  return_type     = "{\"typeKind\": \"STRING\"}"
 }
