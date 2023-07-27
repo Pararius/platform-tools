@@ -115,10 +115,10 @@ resource "google_storage_bucket_object" "user_agent_parser_lib" {
 }
 
 resource "google_bigquery_routine" "user_agent_parser" {
-  dataset_id         = local.routines_dataset
-  routine_id         = "user_agent_parser${local.branch_suffix_underscore_edition}"
-  routine_type       = "SCALAR_FUNCTION"
-  language           = "JAVASCRIPT"
+  dataset_id   = local.routines_dataset
+  routine_id   = "user_agent_parser${local.branch_suffix_underscore_edition}"
+  routine_type = "SCALAR_FUNCTION"
+  language     = "JAVASCRIPT"
   imported_libraries = [
     format("gs://%s/%s", google_storage_bucket_object.user_agent_parser_lib.bucket, google_storage_bucket_object.user_agent_parser_lib.name)
   ]
@@ -187,13 +187,13 @@ resource "google_bigquery_routine" "greatest_furnished_type" {
 (
   SELECT
     IF(
-      REGEXP_CONTAINS(x, 'furnished|gemeubileerd'),
+      REGEXP_CONTAINS(y, 'furnished|gemeubileerd'),
       'furnished',
       IF(
-        REGEXP_CONTAINS(x, 'upholstered|gestoffeerd'),
+        REGEXP_CONTAINS(y, 'upholstered|gestoffeerd'),
         'upholstered',
         IF(
-          REGEXP_CONTAINS(x, 'shell|kaal'),
+          REGEXP_CONTAINS(y, 'shell|kaal'),
           'shell',
           NULL
         )
