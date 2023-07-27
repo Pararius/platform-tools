@@ -184,23 +184,18 @@ resource "google_bigquery_routine" "greatest_furnished_type" {
     data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
   }
   definition_body = <<EOF
-(
-  SELECT
+IF(
+  REGEXP_CONTAINS(ARRAY_TO_STRING(raw_types, ','), 'furnished|gemeubileerd'),
+  'furnished',
+  IF(
+    REGEXP_CONTAINS(ARRAY_TO_STRING(raw_types, ','), 'upholstered|gestoffeerd'),
+    'upholstered',
     IF(
-      REGEXP_CONTAINS(y, 'furnished|gemeubileerd'),
-      'furnished',
-      IF(
-        REGEXP_CONTAINS(y, 'upholstered|gestoffeerd'),
-        'upholstered',
-        IF(
-          REGEXP_CONTAINS(y, 'shell|kaal'),
-          'shell',
-          NULL
-        )
-      )
+      REGEXP_CONTAINS(ARRAY_TO_STRING(raw_types, ','), 'shell|kaal'),
+      'shell',
+      NULL
     )
-  FROM UNNEST(raw_types) AS y
-  LIMIT 1
+  )
 )
 EOF
   language        = "SQL"
