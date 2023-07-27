@@ -173,3 +173,31 @@ resource "google_bigquery_routine" "user_agent_parser" {
   }
 EOF
 }
+
+resource "google_bigquery_routine" "greatest_furnished_type" {
+  dataset_id   = local.routines_dataset
+  routine_id   = "greatest_furnished_type${local.branch_suffix_underscore_edition}"
+  routine_type = "SCALAR_FUNCTION"
+  arguments {
+    name          = "raw_types"
+    argument_kind = "FIXED_TYPE"
+    data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
+  }
+  definition_body = <<EOF
+IF(
+  REGEXP_CONTAINS(ARRAY_TO_STRING(raw_types, ','), 'furnished|gemeubileerd'),
+  'furnished',
+  IF(
+    REGEXP_CONTAINS(ARRAY_TO_STRING(raw_types, ','), 'upholstered|gestoffeerd'),
+    'upholstered',
+    IF(
+      REGEXP_CONTAINS(ARRAY_TO_STRING(raw_types, ','), 'shell|kaal'),
+      'shell',
+      NULL
+    )
+  )
+)
+EOF
+  language        = "SQL"
+  return_type     = "{\"typeKind\": \"STRING\"}"
+}
