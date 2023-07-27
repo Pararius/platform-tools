@@ -60,7 +60,17 @@ resource "google_bigquery_routine" "json_get_timestamp" {
 
 resource "google_bigquery_routine" "json_get_bool" {
   dataset_id      = local.routines_dataset
-  definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS BOOL)"
+  definition_body = <<EOF
+IF(
+  LOWER(SAFE_CAST(JSON_VALUE(json_path) AS STRING)) IN ("ja", "yes", "true", "1", "1.0"),
+  TRUE,
+  IF(
+    LOWER(SAFE_CAST(JSON_VALUE(json_path) AS STRING)) IN ("nee", "no", "false", "0", "0.0"),
+    FALSE,
+    SAFE_CAST(JSON_VALUE(json_path) AS BOOL)
+  )
+)
+EOF
   language        = "SQL"
   project         = local.google_project_id
   routine_id      = "json_bool${local.branch_suffix_underscore_edition}"
