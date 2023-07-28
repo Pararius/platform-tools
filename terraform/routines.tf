@@ -86,7 +86,7 @@ EOF
 
 resource "google_bigquery_routine" "json_get_int" {
   dataset_id      = local.routines_dataset
-  definition_body = "SAFE_CAST(JSON_VALUE(json_path) AS INT64)"
+  definition_body = "SAFE_CAST(SAFE_CAST(JSON_VALUE(json_path) AS NUMERIC) AS INT64)"
   language        = "SQL"
   project         = local.google_project_id
   routine_id      = "json_int${local.branch_suffix_underscore_edition}"
