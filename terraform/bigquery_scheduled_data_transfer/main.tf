@@ -4,7 +4,7 @@ locals {
     "daily" : "every day 00:00",
     "weekly" : "every monday 00:00",
     "quarterly" : "1 of jan,april,july,oct 00:00",
-    "office hours": "0 8-17 * * 1-5"
+    "office hours" : "0 8-17 * * 1-5"
   }
   bigquery_interval_mappings = {
     "hourly" : "1 HOUR",
