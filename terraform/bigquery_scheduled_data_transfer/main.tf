@@ -3,7 +3,9 @@ locals {
     "hourly" : "every hour",
     "daily" : "every day 00:00",
     "weekly" : "every monday 00:00",
-    "quarterly" : "1 of jan,april,july,oct 00:00"
+    "quarterly" : "1 of jan,april,july,oct 00:00",
+    # corrected for UTC -> Europe/Amsterdam including DST (+1 or +2), unfortunately the format does not seem to support combining hour ranges with day ranges
+    "office hours" : "every hour from 06:00 to 16:00"
   }
   bigquery_interval_mappings = {
     "hourly" : "1 HOUR",
