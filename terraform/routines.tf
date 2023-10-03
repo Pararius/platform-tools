@@ -211,3 +211,44 @@ EOF
   language        = "SQL"
   return_type     = "{\"typeKind\": \"STRING\"}"
 }
+
+resource "google_bigquery_routine" "parse_dutch_date" {
+  dataset_id   = local.routines_dataset
+  project      = local.google_project_id
+  routine_id   = "parse_dutch_date${local.branch_suffix_underscore_edition}"
+  routine_type = "SCALAR_FUNCTION"
+
+  arguments {
+    name          = "date_str"
+    argument_kind = "FIXED_TYPE"
+    data_type     = "{\"typeKind\" :  \"STRING\"}"
+  }
+
+  language    = "SQL"
+  return_type = "{\"typeKind\": \"STRING\"}"
+
+  definition_body = <<EOF
+  CAST(PARSE_DATE(
+    "%F",
+    CONCAT(
+    SPLIT(date_str,' ')[OFFSET(2)],
+    "-",
+    CASE LOWER(SPLIT(date_str,' ')[OFFSET(1)])
+      WHEN "januari" THEN "01"
+      WHEN "februari" THEN "02"
+      WHEN "maart" THEN "03"
+      WHEN "april" THEN "04"
+      WHEN "mei" THEN "05"
+      WHEN "juni" THEN "06"
+      WHEN "juli" THEN "07"
+      WHEN "augustus" THEN "08"
+      WHEN "september" THEN "09"
+      WHEN "oktober" THEN "10"
+      WHEN "november" THEN "11"
+      WHEN "december" THEN "12"
+    END,
+    "-",
+    SPLIT(date_str,' ')[OFFSET(0)])
+  ) AS STRING)
+EOF
+}
