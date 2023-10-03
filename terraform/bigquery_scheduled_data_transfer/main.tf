@@ -40,4 +40,3 @@ resource "google_bigquery_data_transfer_config" "default" {
     disable_auto_scheduling = var.enable_auto_scheduling ? false : true
   }
 }
-\
