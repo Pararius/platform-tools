@@ -34,7 +34,10 @@ resource "google_bigquery_data_transfer_config" "default" {
   # formatting rules are quite hard to generalize, see: https://cloud.google.com/appengine/docs/flexible/scheduling-jobs-with-cron-yaml#cron_yaml_The_schedule_format
   schedule = try(local.bigquery_cronjob_mappings[var.interval], var.interval)
 
+  service_account_name = var.service_account_name
+
   schedule_options {
     disable_auto_scheduling = var.enable_auto_scheduling ? false : true
   }
 }
+\

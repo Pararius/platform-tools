@@ -1,11 +1,13 @@
-variable "name" {
+variable "destination_dataset_id" {
   type        = string
-  description = "A unique (display) name describing this data transfer"
+  default     = null
+  description = "The destination dataset to load the data into (if any)."
 }
 
-variable "interval" {
+variable "destination_table_name_template" {
   type        = string
-  description = "the interval at which this query should be executed, also affects `interval` variable available inside the query"
+  default     = null
+  description = "The destination table to load the data into (if any)."
 }
 
 variable "enable_auto_scheduling" {
@@ -14,9 +16,20 @@ variable "enable_auto_scheduling" {
   description = "Whether this data transfer should be scheduled as soon as its deployed (production), or only triggered by hand (development)."
 }
 
+variable "interval" {
+  type        = string
+  description = "the interval at which this query should be executed, also affects `interval` variable available inside the query"
+}
+
 variable "location" {
   type        = string
   description = "Google Cloud location used to execute the data transfer. To reduce costs it is recommended to keep this the same as the tables where data is transferred from/to."
+}
+
+
+variable "name" {
+  type        = string
+  description = "A unique (display) name describing this data transfer"
 }
 
 variable "query_template" {
@@ -30,16 +43,10 @@ variable "query_variables" {
   description = "Optional variables to pass to your query template."
 }
 
-variable "destination_dataset_id" {
+variable "service_account_name" {
   type        = string
   default     = null
-  description = "The destination dataset to load the data into (if any)."
-}
-
-variable "destination_table_name_template" {
-  type        = string
-  default     = null
-  description = "The destination table to load the data into (if any)."
+  description = "Service account used for executing the scheduled data transfer."
 }
 
 variable "write_disposition" {
