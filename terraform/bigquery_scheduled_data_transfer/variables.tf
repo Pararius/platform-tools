@@ -43,10 +43,10 @@ variable "query_variables" {
   description = "Optional variables to pass to your query template."
 }
 
-variable "service_account_name" {
+variable "service_account_email" {
   type        = string
   default     = null
-  description = "Service account used for executing the scheduled data transfer."
+  description = "Service account emailaddress used for executing the scheduled data transfer."
 }
 
 variable "write_disposition" {
