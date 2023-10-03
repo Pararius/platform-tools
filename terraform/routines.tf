@@ -220,7 +220,8 @@ resource "google_bigquery_routine" "parse_dutch_date" {
 
   arguments {
     name          = "date_str"
-    argument_kind = "STRING"
+    argument_kind = "FIXED_TYPE"
+    data_type     = "{\"typeKind\" :  \"STRING\"}"
   }
 
   language    = "SQL"
