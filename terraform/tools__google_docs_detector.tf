@@ -2,9 +2,10 @@ module "google_docs_access_checker" {
   function_env_vars = {
 
   }
-  function_memory                 = 512
-  function_name                   = "google-docs-access-checker${local.branch_suffix}"
-  function_service_account_email  = google_service_account.pt_cloud_function_runner.email
+  function_memory = 512
+  function_name   = "google-docs-access-checker${local.branch_suffix}"
+  #  function_service_account_email  = google_service_account.pt_cloud_function_runner.email
+  function_service_account_email  = "c.leentfaar@pararius.nl"
   function_timeout                = 300
   function_type                   = "http"
   google_cloud_project_id         = local.google_project_id
