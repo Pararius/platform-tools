@@ -15,3 +15,9 @@ resource "google_project_iam_member" "cloud_function_runner_roles" {
   member  = "serviceAccount:${google_service_account.pt_cloud_function_runner.email}"
   project = local.google_project_id
 }
+
+resource "google_service_account_iam_member" "cf" {
+  member             = "serviceAccount:${google_service_account.pt_cloud_function_runner.email}"
+  role               = "roles/iam.serviceAccountTokenCreator"
+  service_account_id = "c.leentfaar@pararius.nl"
+}

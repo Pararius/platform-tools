@@ -35,7 +35,7 @@ def scan_docs():
         for item in items:
             print(item)
             print(f"{item['name']} ({item['id']})")
-            public.append(item['name'])
+            public.append(item["name"])
 
         return public
     except HttpError as error:
