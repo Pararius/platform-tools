@@ -50,6 +50,13 @@ def filter_public_docs(docs: list) -> []:
 def handler(request=None) -> Tuple[str, int]:
     # data = request.get_json(silent=True) or {}
     docs = scan_docs()
+
+    if len(docs) == 0:
+        return (
+            f"No documents found, perhaps the configured service account does not have enough permission to view them?",
+            200,
+        )
+
     public_docs = filter_public_docs(docs)
 
     if len(public_docs) > 0:
