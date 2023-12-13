@@ -18,6 +18,7 @@ locals {
   branch_suffix_underscore_edition = var.git_branch == "" || var.git_branch == "main" ? "" : "_${replace(var.git_branch, "-", "_")}"
   branch_suffix                    = var.git_branch == "" || var.git_branch == "main" ? "" : "-${var.git_branch}"
   data_source_branch_suffix        = ""
+  is_production                    = var.git_branch == "" || contains([], var.git_branch)
   google_project_id                = "data-prod-123456"
   region                           = "europe-west1"
   zone                             = "europe-west1-b"
