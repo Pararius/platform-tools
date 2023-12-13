@@ -1,6 +1,26 @@
 version: "3"
 
 services:
+  cloud-function:
+    build:
+      dockerfile: ${PWD}/docker/cloud-function/Dockerfile
+      context: ${CONTEXT:-.}
+    volumes:
+      - ${CONTEXT:-.}:/app
+      - ~/.config/gcloud:/tmp/.config/gcloud
+    working_dir: /app
+    environment:
+      CLOUDSDK_CONFIG: /tmp/.config/gcloud
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/.config/gcloud/application_default_credentials.json
+
+  cs:
+    build:
+      dockerfile: ./docker/cs/Dockerfile
+      context: .
+    volumes:
+      - ./:/app
+    working_dir: /app
+
   python:
     build: .
     volumes:
