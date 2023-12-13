@@ -1,7 +1,7 @@
 // Generic SA for Cloud Functions
 resource "google_service_account" "pt_cloud_function_runner" {
   project      = local.google_project_id
-  account_id   = format("platform-tools-cf-runner%s", substr(local.branch_suffix, 0, 20))
+  account_id   = format("pt-cf-runner%s", substr(local.branch_suffix, 0, 30))
   display_name = "Schedules and runs all platform-tools pipelines${local.branch_suffix != "" ? format(" (suffix: %s)", local.branch_suffix) : ""}"
 }
 
