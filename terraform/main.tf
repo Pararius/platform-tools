@@ -33,5 +33,15 @@ module "platform-artifacts-bucket" {
   bucket_location   = local.region
   storage_class     = "STANDARD"
   enable_versioning = true
-  force_destroy     = local.branch_suffix == "" ? false : true
+  force_destroy     = local.is_production ? false : true
+}
+
+module "platform-tools-source-code" {
+  source = "github.com/Pararius/platform-tools//terraform/storage"
+
+  bucket_name       = "treehouse-dataplatform-platform-tools-source-code${local.branch_suffix}"
+  bucket_location   = local.region
+  storage_class     = "STANDARD"
+  enable_versioning = true
+  force_destroy     = local.is_production ? false : true
 }

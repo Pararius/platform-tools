@@ -17,6 +17,6 @@ module "google_docs_access_checker" {
     }
   ] : []
   source                  = "./cloud_function/cloud_function"
-  source_code_bucket_name = module.platform-artifacts-bucket.name
+  source_code_bucket_name = module.platform-tools-source-code.bucket_name
   source_prefix           = "./../tools/google-docs-access-checker"
 }
