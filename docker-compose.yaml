@@ -20,3 +20,9 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
+
+  python:
+    build: .
+    volumes:
+      - ./:/app
+    working_dir: /app
