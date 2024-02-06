@@ -110,9 +110,11 @@ def enforce_schema(df, schema):
     """
     return df.select(
         *[
-            col(c.name).cast(c.dataType)
-            if c.name in df.columns
-            else lit(None).cast(c.dataType).alias(c.name)
+            (
+                col(c.name).cast(c.dataType)
+                if c.name in df.columns
+                else lit(None).cast(c.dataType).alias(c.name)
+            )
             for c in schema
         ]
     )
