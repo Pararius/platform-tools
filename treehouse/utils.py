@@ -58,7 +58,7 @@ def interval_to_timestamp_range(
         current_ts = now
 
         return previous_ts.replace(
-            minute=0, second=0, microsecond=0
-        ), current_ts.replace(minute=0, second=0, microsecond=0)
+            hour=0, minute=0, second=0, microsecond=0
+        ), current_ts.replace(hour=0, minute=0, second=0, microsecond=0)
 
     raise Exception(f"Unknown interval: {interval}")
