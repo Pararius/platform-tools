@@ -252,3 +252,23 @@ resource "google_bigquery_routine" "parse_dutch_date" {
   ) AS STRING)
 EOF
 }
+
+resource "google_bigquery_routine" "query_string_to_json" {
+  dataset_id   = local.routines_dataset
+  routine_id   = "query_string_to_json${local.branch_suffix_underscore_edition}"
+  routine_type = "SCALAR_FUNCTION"
+  language     = "JAVASCRIPT"
+  arguments {
+    name      = "qs"
+    data_type = "{\"typeKind\" :  \"STRING\"}"
+  }
+  definition_body = <<EOF
+if (qs.charAt(0) == '?') {
+  qs = qs.substring(1)
+}
+
+return JSON.stringify(JSON.parse('{"' + decodeURI(qs.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}'))
+EOF
+
+  return_type = "{\"typeKind\": \"STRING\"}"
+}
