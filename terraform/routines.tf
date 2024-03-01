@@ -252,3 +252,24 @@ resource "google_bigquery_routine" "parse_dutch_date" {
   ) AS STRING)
 EOF
 }
+
+resource "google_bigquery_routine" "array_distinct" {
+  dataset_id      = local.routines_dataset
+  definition_body = <<EOF
+(
+  SELECT ARRAY_AGG(a.b)
+  FROM (SELECT DISTINCT * FROM UNNEST(value) b) a
+)
+EOF
+  language        = "SQL"
+  project         = local.google_project_id
+  return_type     = "{\"typeKind\": \"ARRAY<STRING>\"}"
+  routine_id      = "array_distinct${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
+
+  arguments {
+    name          = "value"
+    argument_kind = "FIXED_TYPE"
+    data_type     = "{\"typeKind\" :  \"ARRAY<STRING>\"}"
+  }
+}
