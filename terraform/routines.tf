@@ -270,6 +270,6 @@ EOF
   arguments {
     name          = "value"
     argument_kind = "FIXED_TYPE"
-    data_type     = "{\"typeKind\": \"ARRAY\"}"
+    data_type     = "{\"typeKind\": \"ARRAY<STRING>\"}"
   }
 }
