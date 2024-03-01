@@ -268,8 +268,8 @@ EOF
   routine_type    = "SCALAR_FUNCTION"
 
   arguments {
-    name          = "value"
     argument_kind = "FIXED_TYPE"
-    data_type     = "{\"typeKind\": \"ARRAY<STRING>\"}"
+    data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
+    name          = "value"
   }
 }
