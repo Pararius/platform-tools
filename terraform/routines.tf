@@ -263,13 +263,13 @@ resource "google_bigquery_routine" "array_distinct" {
 EOF
   language        = "SQL"
   project         = local.google_project_id
-  return_type     = "{\"typeKind\": \"ARRAY<STRING>\"}"
+  return_type     = "{\"typeKind\": \"ARRAY\"}"
   routine_id      = "array_distinct${local.branch_suffix_underscore_edition}"
   routine_type    = "SCALAR_FUNCTION"
 
   arguments {
     name          = "value"
     argument_kind = "FIXED_TYPE"
-    data_type     = "{\"typeKind\" :  \"ARRAY<STRING>\"}"
+    data_type     = "{\"typeKind\": \"ARRAY\"}"
   }
 }
