@@ -273,3 +273,25 @@ EOF
     name          = "value"
   }
 }
+
+resource "google_bigquery_routine" "array_distinct_not_null" {
+  dataset_id      = local.routines_dataset
+  definition_body = <<EOF
+(
+  SELECT ARRAY_AGG(a.b)
+  FROM (SELECT DISTINCT * FROM UNNEST(value) b) a
+  WHERE a.b IS NOT NULL
+)
+EOF
+  language        = "SQL"
+  project         = local.google_project_id
+  return_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
+  routine_id      = "array_distinct${local.branch_suffix_underscore_edition}"
+  routine_type    = "SCALAR_FUNCTION"
+
+  arguments {
+    argument_kind = "FIXED_TYPE"
+    data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
+    name          = "value"
+  }
+}
