@@ -51,6 +51,12 @@ variable "function_vpc_connector_egress_settings" {
   type    = string
   default = null
 }
+
+variable "labels" {
+  default     = {}
+  description = "Labels that should be passed to the Google Cloud resource"
+  type        = map(string)
+}
 variable "project_id" {
   type = string
 }

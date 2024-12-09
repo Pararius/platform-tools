@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  python:
+    build: .
+    volumes:
+      - ./:/app
+    working_dir: /app
+
+  cs:
+    build:
+      dockerfile: ./docker/cs/Dockerfile
+      context: .
+    volumes:
+      - ./:/app
+    working_dir: /app

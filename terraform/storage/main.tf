@@ -33,6 +33,7 @@ resource "google_storage_bucket" "default" {
       }
     }
   }
+  labels = var.labels
 }
 
 
