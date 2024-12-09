@@ -118,8 +118,7 @@ resource "google_bigquery_routine" "json_get_float" {
 
 
 resource "google_storage_bucket_object" "user_agent_parser_lib" {
-  name = "bigquery_functions/user_agent_parser/woothee.js"
-
+  name   = "bigquery_functions/user_agent_parser/woothee.js"
   bucket = module.platform-artifacts-bucket.bucket_name
   source = "./woothee.js"
 }

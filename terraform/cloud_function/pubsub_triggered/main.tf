@@ -59,4 +59,5 @@ resource "google_cloudfunctions_function" "function" {
     update = "10m"
   }
 
+  labels = var.labels
 }

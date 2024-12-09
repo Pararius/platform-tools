@@ -21,6 +21,12 @@ variable "interval" {
   description = "the interval at which this query should be executed, also affects `interval` variable available inside the query"
 }
 
+variable "labels" {
+  default     = {}
+  description = "Labels that should be passed to the Google Cloud resource"
+  type        = map(string)
+}
+
 variable "location" {
   type        = string
   description = "Google Cloud location used to execute the data transfer. To reduce costs it is recommended to keep this the same as the tables where data is transferred from/to."

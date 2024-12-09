@@ -12,6 +12,11 @@ variable "force_destroy" {
   type    = bool
   default = false
 }
+variable "labels" {
+  type        = map(string)
+  description = "Labels that should be passed to the Google Cloud resource"
+  default     = {}
+}
 variable "lifecycle_rules" {
   type    = list(any)
   default = []
