@@ -114,20 +114,13 @@ resource "google_bigquery_routine" "json_get_float" {
   }
 
   return_type = "{\"typeKind\" :  \"FLOAT64\"}"
-  labels = {
-    billing_category = "fundamental"
-  }
 }
 
 
 resource "google_storage_bucket_object" "user_agent_parser_lib" {
-  name = "bigquery_functions/user_agent_parser/woothee.js"
-
+  name   = "bigquery_functions/user_agent_parser/woothee.js"
   bucket = module.platform-artifacts-bucket.bucket_name
   source = "./woothee.js"
-  labels = {
-    billing_category = "fundamental"
-  }
 }
 
 resource "google_bigquery_routine" "user_agent_parser" {
@@ -188,9 +181,6 @@ resource "google_bigquery_routine" "user_agent_parser" {
   	}
   }
 EOF
-  labels = {
-    billing_category = "fundamental"
-  }
 }
 
 resource "google_bigquery_routine" "greatest_furnished_type" {
@@ -219,9 +209,6 @@ IF(
 EOF
   language        = "SQL"
   return_type     = "{\"typeKind\": \"STRING\"}"
-  labels = {
-    billing_category = "fundamental"
-  }
 }
 
 resource "google_bigquery_routine" "parse_dutch_date" {
@@ -263,9 +250,6 @@ resource "google_bigquery_routine" "parse_dutch_date" {
     SPLIT(date_str,' ')[OFFSET(0)])
   ) AS STRING)
 EOF
-  labels = {
-    billing_category = "fundamental"
-  }
 }
 
 resource "google_bigquery_routine" "array_distinct" {
@@ -286,8 +270,5 @@ EOF
     argument_kind = "FIXED_TYPE"
     data_type     = "{\"typeKind\": \"ARRAY\", \"arrayElementType\": {\"typeKind\": \"STRING\"}}"
     name          = "value"
-  }
-  labels = {
-    billing_category = "fundamental"
   }
 }

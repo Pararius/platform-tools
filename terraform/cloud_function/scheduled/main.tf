@@ -28,7 +28,6 @@ resource "google_storage_bucket_object" "functioncode" {
 
   bucket = var.source_code_bucket_name
   source = data.archive_file.source.output_path
-  labels = var.labels
 }
 
 resource "google_cloudfunctions_function" "function" {
