@@ -83,7 +83,6 @@ resource "google_cloud_scheduler_job" "scheduler_job" {
       service_account_email = var.scheduler_service_account_email
     }
   }
-  labels = var.labels
 }
 
 resource "google_cloudfunctions_function_iam_member" "invoker" {
@@ -92,5 +91,4 @@ resource "google_cloudfunctions_function_iam_member" "invoker" {
   project        = google_cloudfunctions_function.function.project
   region         = google_cloudfunctions_function.function.region
   role           = "roles/cloudfunctions.invoker"
-  labels         = var.labels
 }
