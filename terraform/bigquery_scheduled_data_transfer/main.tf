@@ -24,13 +24,13 @@ resource "google_bigquery_data_transfer_config" "default" {
 
   params = {
     destination_table_name_template = var.destination_table_name_template
-    query = concat(
+    query = join("", [
       length(var.labels) > 0 ? format("SET @@query_label = \"%s\";\n\n", join(",", [for key, value in var.labels : format("%s:%s", key, value)])) : "",
       templatefile(
         var.query_template,
         merge(var.query_variables, { interval = try(local.bigquery_interval_mappings[var.interval], var.interval) })
       )
-    )
+    ])
     write_disposition = var.write_disposition
   }
 
