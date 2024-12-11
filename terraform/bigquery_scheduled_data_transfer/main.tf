@@ -23,12 +23,18 @@ resource "google_bigquery_data_transfer_config" "default" {
   destination_dataset_id = var.destination_dataset_id
 
   params = {
-    query = templatefile(
-      var.query_template,
-      merge(var.query_variables, { interval = try(local.bigquery_interval_mappings[var.interval], var.interval) })
-    )
     destination_table_name_template = var.destination_table_name_template
-    write_disposition               = var.write_disposition
+    query = templatefile(
+      "./scheduled_query_with_labels.sql",
+      {
+        LABELS_STRING = join("\n", [for key, value in var.labels : format("SET @@query_label = \"%s:%s\";", key, value)])
+        ORIGINAL_QUERY = templatefile(
+          var.query_template,
+          merge(var.query_variables, { interval = try(local.bigquery_interval_mappings[var.interval], var.interval) })
+        )
+      }
+    )
+    write_disposition = var.write_disposition
   }
 
   # formatting rules are quite hard to generalize, see: https://cloud.google.com/appengine/docs/flexible/scheduling-jobs-with-cron-yaml#cron_yaml_The_schedule_format
