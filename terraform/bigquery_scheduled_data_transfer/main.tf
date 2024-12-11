@@ -27,7 +27,7 @@ resource "google_bigquery_data_transfer_config" "default" {
     query = templatefile(
       "${path.module}/scheduled_query_with_labels.sql",
       {
-        LABELS_STRING = join("\n", [for key, value in var.labels : format("SET @@query_label = \"%s:%s\";", key, value)])
+        LABELS_STRING = join("", [for key, value in var.labels : format("SET @@query_label = \"%s:%s\";\n", key, value)])
         ORIGINAL_QUERY = templatefile(
           var.query_template,
           merge(var.query_variables, { interval = try(local.bigquery_interval_mappings[var.interval], var.interval) })
