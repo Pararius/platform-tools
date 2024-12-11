@@ -24,15 +24,12 @@ resource "google_bigquery_data_transfer_config" "default" {
 
   params = {
     destination_table_name_template = var.destination_table_name_template
-    query = templatefile(
-      "${path.module}/scheduled_query_with_labels.sql",
-      {
-        LABELS_STRING = length(var.labels) > 0 ? format("SET @@query_label = \"%s\";\n", join(",", [for key, value in var.labels : format("%s:%s", key, value)])) : ""
-        ORIGINAL_QUERY = templatefile(
-          var.query_template,
-          merge(var.query_variables, { interval = try(local.bigquery_interval_mappings[var.interval], var.interval) })
-        )
-      }
+    query = concat(
+      length(var.labels) > 0 ? format("SET @@query_label = \"%s\";\n\n", join(",", [for key, value in var.labels : format("%s:%s", key, value)])) : "",
+      templatefile(
+        var.query_template,
+        merge(var.query_variables, { interval = try(local.bigquery_interval_mappings[var.interval], var.interval) })
+      )
     )
     write_disposition = var.write_disposition
   }
