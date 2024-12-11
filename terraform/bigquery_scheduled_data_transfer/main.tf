@@ -25,7 +25,7 @@ resource "google_bigquery_data_transfer_config" "default" {
   params = {
     destination_table_name_template = var.destination_table_name_template
     query = templatefile(
-      "scheduled_query_with_labels.sql",
+      "${path.module}/scheduled_query_with_labels.sql",
       {
         LABELS_STRING = join("\n", [for key, value in var.labels : format("SET @@query_label = \"%s:%s\";", key, value)])
         ORIGINAL_QUERY = templatefile(
